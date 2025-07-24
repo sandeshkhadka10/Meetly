@@ -1,5 +1,5 @@
 import httpStatus from "http-status";
-import {User} from "../models/usersModels";
+import {User} from "../models/usersModels.js";
 import bcrypt,{hash} from "bcrypt";
 
 const register = async(req,res)=>{
@@ -42,3 +42,5 @@ const login = async(req,res)=>{
         return res.status(500).json({message:`Something went wrong ${error}`});
     }
 }
+
+export {register,login};
