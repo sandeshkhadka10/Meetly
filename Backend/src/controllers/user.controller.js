@@ -1,6 +1,7 @@
 import httpStatus from "http-status";
 import {User} from "../models/user.models.js";
 import bcrypt,{hash} from "bcrypt";
+import crypto from "crypto";
 
 const register = async(req,res)=>{
     const {name, username,password} = req.body;
@@ -28,11 +29,12 @@ const login = async(req,res)=>{
         return res.status(400).json({message:"Please input the value"});
     }
     try{
-        const user = await User.find({username});
+        const user = await User.findOne({username});
         if(!user){
             return res.status(httpStatus.NOT_FOUND).json({message:"User not found"});
         }
         if(bcrypt.compare(password,user.password)){
+            // generating a secure random token which is often used for things like password reset links, email verifications, or session tokens.
             let token = crypto.randomBytes(20).toString("hex");
             user.token = token;
             await user.save();

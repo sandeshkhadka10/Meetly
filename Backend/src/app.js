@@ -9,6 +9,8 @@ import userRoutes from "./routes/user.routes.js";
 
 const app = express();
 const server = createServer(app);
+
+// attaching the socket.io to the httpserver
 // const io = new Server(server);
 const io = connectToSocket(server);
 
