@@ -5,7 +5,15 @@ let messages={}
 let timeOnline={}
 
 export const connectToSocket = (server)=>{
-    const io = new Server(server);
+    const io = new Server(server,{
+        // here we are merging socket with express server and it is for testing purpose only i.e not for production
+        cors:{
+            origin:"*",
+            methods:["GET","POST"],
+            allowedHeaders:["*"],
+            credentials:true
+        }
+    });
   
     io.on("Connection",(socket)=>{
 
