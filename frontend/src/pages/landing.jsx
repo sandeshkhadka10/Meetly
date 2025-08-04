@@ -27,7 +27,7 @@ export default function LandingPage() {
           </h1>
           <p>Cover a distance by Meetly</p>
           <div role="button">
-            <Link to="/home">Get started</Link>
+            <Link to="/auth">Get started</Link>
           </div>
         </div>
         <div>
