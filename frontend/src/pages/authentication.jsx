@@ -16,6 +16,17 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 const defaultTheme = createTheme();
 
 export default function Authentication() {
+  const [name,setName] = React.useState();
+  const [username,setUsername] = React.useState();
+  const [password,setPassword] = React.useState();
+  const [error,setError] = React.useState();
+  const [messages,setMessages] = React.useState();
+
+  const [formState,setFormState] = React.useState(0);
+  
+  // this is for snackbar
+  const [open,setOpen] = React.useState(false);
+
   return (
     <ThemeProvider theme={defaultTheme}>
       <Box
@@ -50,11 +61,34 @@ export default function Authentication() {
               <LockOutlinedIcon />
             </Avatar>
             
-            <Typography component="h1" variant="h5">
-              Sign in
-            </Typography>
+            <div>
+              <Button variant={formState === 0 ? "contained":""} onClick={()=> {setFormState(0)}}>
+                Sign In
+              </Button>
+              <Button variant={formState === 1 ? "contained":""} onClick={()=> setFormState(1)}>
+                Sign Out
+              </Button>
+            </div>
             
             <Box component="form" noValidate sx={{ mt: 2, width: '100%' }}>
+              {/* <p>{name}</p> */}
+              {/* if signup is pressed then display full name */}
+              {formState === 1 ? 
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                id="Full Name"
+                label="Full Name"
+                name="username"
+                autoFocus
+                size="small"
+                onChange={(e)=>setName(e.target.value)}
+              />
+              : <></>}
+
+              {/* if signin is pressed then not displaying full name */}
+              {/* <p>{username}</p> */}
               <TextField
                 margin="normal"
                 required
@@ -62,10 +96,11 @@ export default function Authentication() {
                 id="username"
                 label="Username"
                 name="username"
-                autoComplete="username"
                 autoFocus
                 size="small"
+                onChange={(e)=>setUsername(e.target.value)}
               />
+              {/* <p>{password}</p> */}
               <TextField
                 margin="normal"
                 required
@@ -74,14 +109,16 @@ export default function Authentication() {
                 label="Password"
                 type="password"
                 id="password"
-                autoComplete="current-password"
                 size="small"
+                onChange={(e)=>setPassword(e.target.value)}
               />
+
               <FormControlLabel
                 control={<Checkbox value="remember" color="primary" size="small" />}
                 label="Remember me"
                 sx={{ mt: 1 }}
               />
+
               <Button
                 type="button"
                 fullWidth
