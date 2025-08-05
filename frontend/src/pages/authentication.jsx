@@ -12,6 +12,9 @@ import Grid from '@mui/material/Grid';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import {AuthContext} from '../contexts/AuthContenxt';
+import Snackbar from '@mui/material/Snackbar';
+
 
 const defaultTheme = createTheme();
 
@@ -20,12 +23,40 @@ export default function Authentication() {
   const [username,setUsername] = React.useState();
   const [password,setPassword] = React.useState();
   const [error,setError] = React.useState();
-  const [messages,setMessages] = React.useState();
+  const [message,setMessage] = React.useState();
 
   const [formState,setFormState] = React.useState(0);
   
   // this is for snackbar
   const [open,setOpen] = React.useState(false);
+
+  const {handleRegister, handleLogin} = React.useContext(AuthContext);
+
+  let handleAuth = async() =>{
+    try{
+      if(formState === 0){
+        let result = await handleLogin(username,password);
+        setMessage(result);
+        setOpen(true);
+        setUsername("");
+        setPassword("");
+        setError("");
+      }
+      if(formState === 1){
+        let result = await handleRegister(name,username,password);
+        setMessage(result);
+        setOpen(true);
+        setName("");
+        setUsername("");
+        setPassword("");
+        setError("");
+        setFormState(0);
+      }
+    }catch(error){
+      let message = (error.response.data.message);
+      setError(message);
+    }
+  }
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -65,8 +96,8 @@ export default function Authentication() {
               <Button variant={formState === 0 ? "contained":""} onClick={()=> {setFormState(0)}}>
                 Sign In
               </Button>
-              <Button variant={formState === 1 ? "contained":""} onClick={()=> setFormState(1)}>
-                Sign Out
+              <Button variant={formState === 1 ? "contained":""} onClick={()=> {setFormState(1)}}>
+                Register
               </Button>
             </div>
             
@@ -81,6 +112,7 @@ export default function Authentication() {
                 id="Full Name"
                 label="Full Name"
                 name="username"
+                value={name || ""}
                 autoFocus
                 size="small"
                 onChange={(e)=>setName(e.target.value)}
@@ -96,6 +128,7 @@ export default function Authentication() {
                 id="username"
                 label="Username"
                 name="username"
+                value={username || ""}
                 autoFocus
                 size="small"
                 onChange={(e)=>setUsername(e.target.value)}
@@ -106,6 +139,7 @@ export default function Authentication() {
                 required
                 fullWidth
                 name="password"
+                value={password || ""}
                 label="Password"
                 type="password"
                 id="password"
@@ -113,20 +147,25 @@ export default function Authentication() {
                 onChange={(e)=>setPassword(e.target.value)}
               />
 
-              <FormControlLabel
+              {/* <FormControlLabel
                 control={<Checkbox value="remember" color="primary" size="small" />}
                 label="Remember me"
                 sx={{ mt: 1 }}
-              />
+              /> */}
+              
+              {/* it is for displaying error message at the signup or signin */}
+              <p style={{color:"red"}}>{error}</p>
 
               <Button
                 type="button"
                 fullWidth
                 variant="contained"
                 sx={{ mt: 2, mb: 2 }}
+                onClick={handleAuth}
               >
-                Sign In
+                {formState === 0 ? "Sign In": "Register" }
               </Button>
+
               {/* <Grid container spacing={2}>
                 <Grid item xs={12} sm={6}>
                   <Link href="#" variant="body2">
@@ -139,10 +178,19 @@ export default function Authentication() {
                   </Link>
                 </Grid>
               </Grid> */}
+
             </Box>
           </Box>
         </Paper>
       </Box>
+
+      <Snackbar
+        open={open}
+        autoHideDuration={4000}
+        onClose={() => setOpen(false)}
+        message={message}
+      />
+
     </ThemeProvider>
   );
 }
