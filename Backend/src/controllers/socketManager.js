@@ -16,6 +16,7 @@ export const connectToSocket = (server)=>{
     });
   
     io.on("Connection",(socket)=>{
+        console.log("Something connected");
 
         // join call or you can input any name you want
         socket.on("join-call",(path)=>{
