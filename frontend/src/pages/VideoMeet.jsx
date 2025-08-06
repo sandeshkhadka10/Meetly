@@ -89,6 +89,8 @@ export default function VideoMeetComponent(){
 
     }
 
+    // it's job is to request camera/mic stream from the
+    // browser, or stop the stream if not needed.
     let getUserMedia = () =>{
         if((video && videoAvailable) || (audio && audioAvailable)){
             navigator.mediaDevices.getUserMedia({video: video, audio: audio})
@@ -96,9 +98,16 @@ export default function VideoMeetComponent(){
             .then((stream)=>{})
             .catch((e)=>console.log(e))
         }else{
+            // if the required video/audio isn't available,
+            // it will stop the current stream
             try{
+
+                // gets all tracks(video/audio) from the current media stream in the <video> element.
                 let tracks = localVideoRef.current.srcObject.getTracks();
+
+                // loops over them and stops each track(camera/mic)
                 tracks.forEach(track => track.stop())
+                
             }catch(error){
 
             }
