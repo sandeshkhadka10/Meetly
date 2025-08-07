@@ -87,7 +87,31 @@ export default function VideoMeetComponent() {
     }, [])
 
     let getUserMediaSuccess = (stream) => {
+        var signal = JSON.parse(message);
+        // checks whether the signaling message is not from yourself
+        // fromId is assumedd to be the ID of the peer who sent the signal
+        if (fromId !== socketIdRef.current) {
+            // checks whether the signal object contains SDP which is required for WebRTC negitiation
+            if (signal.sdp) {
+                // Sets the remote peer’s SDP (offer/answer) as the remote description on your RTCPeerConnection
+                // RTCSessionDescription wraps the SDP object to make it usable.
+                connections[fromId].setRemoteDescription(new RTCSessionDescription(signal.sdp)).then(() => {
+                    // If the received SDP is an offer, your side must respond with an answer.
+                    if (signal.sdp.type === "offer") {
+                        // Creates an SDP answer to the offer using the WebRTC API.
+                        connections[fromId].createAnswer().then((description) => {
+                            // After creating the answer, you set it as your local description, which means "I’m ready to communicate with this config."
+                            connections[fromId].setLocalDescription(description).then(() => {
+                                // Sends the local description (your answer) back to the original peer (fromId) using the signal event.
+                                socketIdRef.current.emit("signal", fromId, JSON.stringify({ "sdp": connections[fromId].localDescription }
+                                ))
+                            })
+                        })
+                    }
 
+                })
+            }
+        }
     }
 
     // it's job is to request camera/mic stream from the
@@ -95,7 +119,7 @@ export default function VideoMeetComponent() {
     let getUserMedia = () => {
         if ((video && videoAvailable) || (audio && audioAvailable)) {
             navigator.mediaDevices.getUserMedia({ video: video, audio: audio })
-                .then(getUserMediaSuccess) // Todo: getUserMediaSuccess
+                .then(getUserMediaSuccess)
                 .then((stream) => { })
                 .catch((e) => console.log(e))
         } else {
@@ -127,35 +151,35 @@ export default function VideoMeetComponent() {
     let addMessage = () => {
 
     }
-    
+
     // it's responsbile for initalizing socket connections and
     // managing the WebRTC peer connections and signaling
     let connectToSocketServer = () => {
 
         // connects the client to the Socket.IO server using the server_url
         socketRef.current = io.connect(server_url, { secure: false });
-        
+
         // handles signal events from server and these messages typically include
         // WebRTC signaling data like SDP offers/answers or ICE candidates.
         socketRef.current.on('signal', gotMessageFromServer);
-        
+
         // it executes when the client successfully connects to the socket server
         socketRef.current.on("connect", () => {
 
             // This is used to group users into the same room for video calls
             socketRef.current.emit("join-call", window.location.href);
-            
+
             // saves the client's socket Id into a reference for later identifications
             socketIdRef.current = socketRef.current.id;
-            
+
             // handles incoming chat message
             socketRef.current.on("chat-message", addMessage);
-            
+
             // handle user leaving
             socketRef.current.on("user-left", (id) => {
                 setVideo((videos) => videos.filter((video) => video.socketId !== id))
             })
-            
+
             // handles user joining
             socketRef.current.on("user-joined", (id, clients) => {
 
@@ -165,7 +189,7 @@ export default function VideoMeetComponent() {
                     // their socket ID as the key
                     // peerConfigConnections typically includes ICE server configurations(STUN)
                     connections[socketListId] = new RTCPeerConnection(peerConfigConnections);
-                    
+
                     // when a new ICE candidate(connection path info) is found, it's send to the peer via the
                     // socket using the signal event
                     connections[socketListId].onicecandidate = (event) => {
@@ -173,12 +197,12 @@ export default function VideoMeetComponent() {
                             socketRef.current.emit("signal", socketListId, JSON.stringify({ 'ice': event.candidate }))
                         }
                     }
-                    
+
                     // trigger when the remote stream is received
                     connections[socketListId].onaddstream = (event) => {
                         // checks if the video stream for that socket ID already exists
                         let videoExists = videoRef.current.find(video => video.socketId === socketListId);
-                        
+
                         // if the video stream already exists, update it with the new stream
                         if (videoExists) {
                             setVideo(videos => {
@@ -212,7 +236,7 @@ export default function VideoMeetComponent() {
                         // let blackSlience
                     }
                 })
-                
+
                 // checks if the newly joined user is me
                 if (id === socketIdRef.current) {
                     for (let id2 in connections) {
@@ -221,8 +245,8 @@ export default function VideoMeetComponent() {
                         try {
                             // otherwise add local stream to each other peer connection
                             connections[id2].addStream(window.localStream)
-                        } catch (error) {}
-                        
+                        } catch (error) { }
+
                         // creates an SDP offer
                         // set it as the local description
                         // send it to the corresponding peer via signal event.
