@@ -86,33 +86,67 @@ export default function VideoMeetComponent() {
         getPermissions();
     }, [])
 
+    // it is called when the browser successfully grants access to the user's camera and microphone
+    // and receives the new media stream from the browser
     let getUserMediaSuccess = (stream) => {
-        var signal = JSON.parse(message);
-        // checks whether the signaling message is not from yourself
-        // fromId is assumedd to be the ID of the peer who sent the signal
-        if (fromId !== socketIdRef.current) {
-            // checks whether the signal object contains SDP which is required for WebRTC negitiation
-            if (signal.sdp) {
-                // Sets the remote peer’s SDP (offer/answer) as the remote description on your RTCPeerConnection
-                // RTCSessionDescription wraps the SDP object to make it usable.
-                connections[fromId].setRemoteDescription(new RTCSessionDescription(signal.sdp)).then(() => {
-                    // If the received SDP is an offer, your side must respond with an answer.
-                    if (signal.sdp.type === "offer") {
-                        // Creates an SDP answer to the offer using the WebRTC API.
-                        connections[fromId].createAnswer().then((description) => {
-                            // After creating the answer, you set it as your local description, which means "I’m ready to communicate with this config."
-                            connections[fromId].setLocalDescription(description).then(() => {
-                                // Sends the local description (your answer) back to the original peer (fromId) using the signal event.
-                                socketIdRef.current.emit("signal", fromId, JSON.stringify({ "sdp": connections[fromId].localDescription }
-                                ))
-                            })
-                        })
-                    }
+        // stops old tracks from window.localStream to prevent multiple media streams from stacking
+        try{
+            window.localStream.getTracks().forEach(track => track.stop())
+        }catch(e){
+            console.log(e);
+        }
+        window.localStream = stream;
+        localVideoRef.current.srcObject = stream;
 
+        for(let id in connections){
+            // skips sending the stream to yourself
+            if(id === socketIdRef.current)continue;
+
+            // adds your new stream to the peer connection so the remote user can see/hear you
+            connections[id].addStream(window.localStream)
+
+            // creates an SDP offer
+            // sets it as your local description
+            // sends it to the peer using Socket.IO, so the peer can respond with an SDP answer
+            connections[id].createOffer().then((description)=>{
+                connections[id].setLocalDescription(description)
+                .then(()=>{
+                    socketIdRef.current.emit("signal",id,JSON.stringify({"sdp":connections[id].localDescription}));
+                })
+                .catch(e => console.log(e));
+            })
+        }
+
+        // it runs when the user disables camera or mic, or stops screen sharing
+        stream.getTracks().forEach(track => track.onended = () => {
+            setVideo(false)
+            setAudio(false)
+            
+            // tries to stop any remaining tracks from the video element to fully clean up the media stream
+            try{
+                let tracks = localVideoRef.current.srcObject.getTracks();
+                tracks.forEach(track => track.stop())
+            }catch(e){
+                console.log(e);
+            }
+
+            // Todo: BlackSilence
+
+            for(let id in connections){
+                connections[id].addStream(window.localStream)
+                connections[id].createOffer().then((description)=>{
+                    connections[id].setLocalDescription(description)
+                       .then(()=>{
+                        socketRef.current.emit("signal",id,JSON.stringify({"sdp":connections[id].localDescription}))
+                       }).catch((e)=>{
+                        console.log(e);
+                       })
                 })
             }
-        }
+        })
     }
+
+    let silence
 
     // it's job is to request camera/mic stream from the
     // browser, or stop the stream if not needed.
@@ -145,6 +179,36 @@ export default function VideoMeetComponent() {
     }, [audio, video])
 
     let gotMessageFromServer = (fromId, message) => {
+        var signal = JSON.parse(message);
+        // checks whether the signaling message is not from yourself
+        // fromId is assumedd to be the ID of the peer who sent the signal
+        if (fromId !== socketIdRef.current) {
+            // checks whether the signal object contains SDP which is required for WebRTC negitiation
+            if (signal.sdp) {
+                // Sets the remote peer’s SDP (offer/answer) as the remote description on your RTCPeerConnection
+                // RTCSessionDescription wraps the SDP object to make it usable.
+                connections[fromId].setRemoteDescription(new RTCSessionDescription(signal.sdp)).then(() => {
+                    // If the received SDP is an offer, your side must respond with an answer.
+                    if (signal.sdp.type === "offer") {
+                        // Creates an SDP answer to the offer using the WebRTC API.
+                        connections[fromId].createAnswer().then((description) => {
+                            // After creating the answer, you set it as your local description, which means "I’m ready to communicate with this config."
+                            connections[fromId].setLocalDescription(description).then(() => {
+                                // Sends the local description (your answer) back to the original peer (fromId) using the signal event.
+                                socketIdRef.current.emit("signal", fromId, JSON.stringify({ "sdp": connections[fromId].localDescription }
+                                ))
+                            }).catch(e => console.log(e));
+                        }).catch(e => console.log(e));
+                    }
+
+                }).catch(e => console.log(e));
+            }
+
+            // check if whether the received signal object cotains an ice property
+            if (signal.ice) {
+                connections[fromId].addIceCandidate(new RTCIceCandidate(signal.ice)).catch(e => console.log(e));
+            }
+        }
 
     }
 
