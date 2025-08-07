@@ -127,36 +127,59 @@ export default function VideoMeetComponent() {
     let addMessage = () => {
 
     }
-
+    
+    // it's responsbile for initalizing socket connections and
+    // managing the WebRTC peer connections and signaling
     let connectToSocketServer = () => {
+
+        // connects the client to the Socket.IO server using the server_url
         socketRef.current = io.connect(server_url, { secure: false });
-
+        
+        // handles signal events from server and these messages typically include
+        // WebRTC signaling data like SDP offers/answers or ICE candidates.
         socketRef.current.on('signal', gotMessageFromServer);
-
+        
+        // it executes when the client successfully connects to the socket server
         socketRef.current.on("connect", () => {
+
+            // This is used to group users into the same room for video calls
             socketRef.current.emit("join-call", window.location.href);
-
+            
+            // saves the client's socket Id into a reference for later identifications
             socketIdRef.current = socketRef.current.id;
-
+            
+            // handles incoming chat message
             socketRef.current.on("chat-message", addMessage);
-
+            
+            // handle user leaving
             socketRef.current.on("user-left", (id) => {
                 setVideo((videos) => videos.filter((video) => video.socketId !== id))
             })
-
+            
+            // handles user joining
             socketRef.current.on("user-joined", (id, clients) => {
-                clients.forEach((socketListId) => {
-                    connections[socketListId] = new RTCPeerConnection(peerConfigConnections);
 
+                // loops through all client socket IDs and creates a peer connection for each.
+                clients.forEach((socketListId) => {
+                    // it creates a new WebRTC peer connection and stores it in a connections object with
+                    // their socket ID as the key
+                    // peerConfigConnections typically includes ICE server configurations(STUN)
+                    connections[socketListId] = new RTCPeerConnection(peerConfigConnections);
+                    
+                    // when a new ICE candidate(connection path info) is found, it's send to the peer via the
+                    // socket using the signal event
                     connections[socketListId].onicecandidate = (event) => {
                         if (event.candidate != null) {
                             socketRef.current.emit("signal", socketListId, JSON.stringify({ 'ice': event.candidate }))
                         }
                     }
-
+                    
+                    // trigger when the remote stream is received
                     connections[socketListId].onaddstream = (event) => {
+                        // checks if the video stream for that socket ID already exists
                         let videoExists = videoRef.current.find(video => video.socketId === socketListId);
-
+                        
+                        // if the video stream already exists, update it with the new stream
                         if (videoExists) {
                             setVideo(videos => {
                                 const updateVideos = videos.map(video =>
@@ -166,6 +189,7 @@ export default function VideoMeetComponent() {
                                 return updateVideos;
                             })
                         } else {
+                            // if the video stream does not exist, add it as a new entry to videos state
                             let newVideo = {
                                 socketId: socketListId,
                                 stream: event.stream,
@@ -180,20 +204,28 @@ export default function VideoMeetComponent() {
                             });
                         }
                     };
+
+                    // if your local video/audio stream is available, add it to the peer conncetion
                     if (window.localStream !== undefined && window.localStream !== null) {
                         connections[socketListId].addStream(window.localStream);
                     } else {
                         // let blackSlience
                     }
                 })
-
+                
+                // checks if the newly joined user is me
                 if (id === socketIdRef.current) {
                     for (let id2 in connections) {
+                        // if id2 is me then skip
                         if (id2 === socketIdRef.current) continue
                         try {
+                            // otherwise add local stream to each other peer connection
                             connections[id2].addStream(window.localStream)
                         } catch (error) {}
-
+                        
+                        // creates an SDP offer
+                        // set it as the local description
+                        // send it to the corresponding peer via signal event.
                         connections[id2].createOffer().then((description) => {
                             connections[id2].setLocalDescription(description)
                                 .then(() => {
