@@ -90,17 +90,17 @@ export default function VideoMeetComponent() {
     // and receives the new media stream from the browser
     let getUserMediaSuccess = (stream) => {
         // stops old tracks from window.localStream to prevent multiple media streams from stacking
-        try{
+        try {
             window.localStream.getTracks().forEach(track => track.stop())
-        }catch(e){
+        } catch (e) {
             console.log(e);
         }
         window.localStream = stream;
         localVideoRef.current.srcObject = stream;
 
-        for(let id in connections){
+        for (let id in connections) {
             // skips sending the stream to yourself
-            if(id === socketIdRef.current)continue;
+            if (id === socketIdRef.current) continue;
 
             // adds your new stream to the peer connection so the remote user can see/hear you
             connections[id].addStream(window.localStream)
@@ -108,12 +108,12 @@ export default function VideoMeetComponent() {
             // creates an SDP offer
             // sets it as your local description
             // sends it to the peer using Socket.IO, so the peer can respond with an SDP answer
-            connections[id].createOffer().then((description)=>{
+            connections[id].createOffer().then((description) => {
                 connections[id].setLocalDescription(description)
-                .then(()=>{
-                    socketIdRef.current.emit("signal",id,JSON.stringify({"sdp":connections[id].localDescription}));
-                })
-                .catch(e => console.log(e));
+                    .then(() => {
+                        socketIdRef.current.emit("signal", id, JSON.stringify({ "sdp": connections[id].localDescription }));
+                    })
+                    .catch(e => console.log(e));
             })
         }
 
@@ -121,32 +121,59 @@ export default function VideoMeetComponent() {
         stream.getTracks().forEach(track => track.onended = () => {
             setVideo(false)
             setAudio(false)
-            
+
             // tries to stop any remaining tracks from the video element to fully clean up the media stream
-            try{
+            try {
                 let tracks = localVideoRef.current.srcObject.getTracks();
                 tracks.forEach(track => track.stop())
-            }catch(e){
+            } catch (e) {
                 console.log(e);
             }
 
-            // Todo: BlackSilence
+            let blackSilence = (...args) => new MediaStream([black(...args), silence()]);
+            window.localStream = blackSilence();
+            localVideoRef.current.srcObject = window.localStream;
 
-            for(let id in connections){
+            for (let id in connections) {
                 connections[id].addStream(window.localStream)
-                connections[id].createOffer().then((description)=>{
+                connections[id].createOffer().then((description) => {
                     connections[id].setLocalDescription(description)
-                       .then(()=>{
-                        socketRef.current.emit("signal",id,JSON.stringify({"sdp":connections[id].localDescription}))
-                       }).catch((e)=>{
-                        console.log(e);
-                       })
+                        .then(() => {
+                            socketRef.current.emit("signal", id, JSON.stringify({ "sdp": connections[id].localDescription }))
+                        }).catch((e) => {
+                            console.log(e);
+                        })
                 })
             }
         })
     }
 
-    let silence
+    // these function creates the silent audio track
+    let silence = () => {
+        // it is used to manage and play audio in web applications
+        let ctx = new AudioContext()
+
+        // creates an OscillatorNode, which generates a periodic waveform
+        // it is a source of audio signals
+        let oscillator = ctx.createOscillator();
+
+        // 1. ctx.createMediaStreamDestination(): Creates a MediaStreamAudioDestinationNode which can be used to capture audio output into a MediaStream.
+        // 2. oscillator.connect(...): Connects the oscillator to this destination node.
+        let dst = oscillator.connect(ctx.createMediaStreamDestination());
+
+        oscillator.start();
+        ctx.resume()
+
+        // dst.stream.getAudioTracks()[0]: gets the first audio track from the MediaStream produced by the destination node
+        return Object.assign(dst.stream.getAudioTracks()[0], { enabled: false })
+    }
+
+    let black = ({ width = 640, height = 480 } = {}) => {
+        let canvas = Object.assign(document.createElement("canvas"), { width, height });
+        canvas.getContext('2d').fillRect(0, 0, width, height);
+        let stream = canvas.captureStream();
+        return Object.assign(stream.getVideoTracks()[0], { enabled: false });
+    }
 
     // it's job is to request camera/mic stream from the
     // browser, or stop the stream if not needed.
@@ -297,7 +324,9 @@ export default function VideoMeetComponent() {
                     if (window.localStream !== undefined && window.localStream !== null) {
                         connections[socketListId].addStream(window.localStream);
                     } else {
-                        // let blackSlience
+                        let blackSilence = (...args) => new MediaStream([black(...args), silence()]);
+                        window.localStream = blackSilence();
+                        connections[socketListId].addStream(window.localStream);
                     }
                 })
 
@@ -353,7 +382,14 @@ export default function VideoMeetComponent() {
                         <video ref={localVideoRef} autoPlay muted></video>
                     </div>
 
-                </div> : <></>}
+                </div> : <>
+                   <video ref={localVideoRef} autoPlay muted></video>
+                   {videos.map((video)=>(
+                    <div key={video.socketId}>
+
+                    </div>
+                   ))}
+                </>}
         </div>
     )
 }
