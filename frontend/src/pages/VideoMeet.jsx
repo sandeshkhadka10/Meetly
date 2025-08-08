@@ -111,7 +111,7 @@ export default function VideoMeetComponent() {
             connections[id].createOffer().then((description) => {
                 connections[id].setLocalDescription(description)
                     .then(() => {
-                        socketIdRef.current.emit("signal", id, JSON.stringify({ "sdp": connections[id].localDescription }));
+                        socketRef.current.emit("signal", id, JSON.stringify({ "sdp": connections[id].localDescription }));
                     })
                     .catch(e => console.log(e));
             })
@@ -222,7 +222,7 @@ export default function VideoMeetComponent() {
                             // After creating the answer, you set it as your local description, which means "I’m ready to communicate with this config."
                             connections[fromId].setLocalDescription(description).then(() => {
                                 // Sends the local description (your answer) back to the original peer (fromId) using the signal event.
-                                socketIdRef.current.emit("signal", fromId, JSON.stringify({ "sdp": connections[fromId].localDescription }
+                                socketRef.current.emit("signal", fromId, JSON.stringify({ "sdp": connections[fromId].localDescription }
                                 ))
                             }).catch(e => console.log(e));
                         }).catch(e => console.log(e));
@@ -361,7 +361,7 @@ export default function VideoMeetComponent() {
     let getMedia = () => {
         setVideo(videoAvailable);
         setAudio(audioAvailable);
-        // connectToSocketServer();
+        connectToSocketServer();
     }
 
     let connect = () => {
@@ -383,12 +383,19 @@ export default function VideoMeetComponent() {
                     </div>
 
                 </div> : <>
-                   <video ref={localVideoRef} autoPlay muted></video>
-                   {videos.map((video)=>(
-                    <div key={video.socketId}>
-
-                    </div>
-                   ))}
+                    <video ref={localVideoRef} autoPlay muted></video>
+                    {videos.map((video) => (
+                        <div key={video.socketId}>
+                            <h2>{video.socketId}</h2>
+                            {/* <video data-socket={video.socketId}
+                     ref={ref =>{
+                        if(ref && video.stream){
+                            ref.srcObject = video.stream;
+                        }
+                     }}
+                     autoPlay></video> */}
+                        </div>
+                    ))}
                 </>}
         </div>
     )

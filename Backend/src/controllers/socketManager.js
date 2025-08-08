@@ -15,7 +15,7 @@ export const connectToSocket = (server)=>{
         }
     });
   
-    io.on("Connection",(socket)=>{
+    io.on("connection",(socket)=>{
         console.log("Something connected");
 
         // join call or you can input any name you want
@@ -29,7 +29,7 @@ export const connectToSocket = (server)=>{
 
             // notify exisiting users that a new user joined
             for(let a = 0; a < connections[path].length; a++){
-                io.to(connections[path][a].emit("user-joined",socket.id,connections[path]));
+                io.to(connections[path][a]).emit("user-joined",socket.id,connections[path]);
             }
 
             if(messages[path] !== undefined){
@@ -86,7 +86,7 @@ export const connectToSocket = (server)=>{
                         
                         // tells every user in that room that the user has left
                         for(let a = 0; a < connections[key].length; ++a){
-                            io.to(connections[key][a].emit("user-left",socket.id));
+                            io.to(connections[key][a]).emit("user-left",socket.id);
                         }
                         
                         // find the position of the socket in the room list and remove using splice
