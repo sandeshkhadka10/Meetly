@@ -387,13 +387,13 @@ export default function VideoMeetComponent() {
                     {videos.map((video) => (
                         <div key={video.socketId}>
                             <h2>{video.socketId}</h2>
-                            {/* <video data-socket={video.socketId}
-                     ref={ref =>{
-                        if(ref && video.stream){
-                            ref.srcObject = video.stream;
-                        }
-                     }}
-                     autoPlay></video> */}
+                            <video data-socket={video.socketId}
+                                ref={ref => {
+                                    if (ref && video.stream) {
+                                        ref.srcObject = video.stream;
+                                    }
+                                }}
+                                autoPlay></video>
                         </div>
                     ))}
                 </>}
