@@ -398,6 +398,10 @@ export default function VideoMeetComponent() {
                         <IconButton>
                            <CallEnd/>
                         </IconButton>
+
+                        <IconButton>
+                            {audio === true ? <VideocamIcon /> : <VideocamOffIcon />}
+                        </IconButton>
                     </div>
 
 
