@@ -2,6 +2,11 @@ import React, { useState, useRef, useEffect } from "react";
 import io from "socket.io-client";
 import TextField from '@mui/material/TextField';
 import Button from "@mui/material/Button";
+import VideocamIcon from "@mui/icons-material/Videocam";
+import VideocamOffIcon from "@mui/icons-material/VideocamOff";
+import CallEnd from "@mui/icons-material/CallEnd";
+import styles from "../styles/videoComponent.module.css";
+import IconButton from "@mui/material/IconButton";
 
 const server_url = "http://localhost:8000";
 
@@ -382,10 +387,23 @@ export default function VideoMeetComponent() {
                         <video ref={localVideoRef} autoPlay muted></video>
                     </div>
 
-                </div> : <>
-                    <video ref={localVideoRef} autoPlay muted></video>
+                </div> :
+                <div className={styles.meetVideoContainer}>
+
+                    <div className={styles.buttonContainers}>
+                        <IconButton>
+                            {video === true ? <VideocamIcon /> : <VideocamOffIcon />}
+                        </IconButton>
+
+                        <IconButton>
+                           <CallEnd/>
+                        </IconButton>
+                    </div>
+
+
+                    <video className={styles.meetUserVideo} ref={localVideoRef} autoPlay muted></video>
                     {videos.map((video) => (
-                        <div key={video.socketId}>
+                        <div className={styles.conferenceView} key={video.socketId}>
                             <h2>{video.socketId}</h2>
                             <video data-socket={video.socketId}
                                 ref={ref => {
@@ -396,7 +414,7 @@ export default function VideoMeetComponent() {
                                 autoPlay></video>
                         </div>
                     ))}
-                </>}
+                </div>}
         </div>
     )
 }
