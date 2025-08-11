@@ -279,7 +279,7 @@ export default function VideoMeetComponent() {
 
             // handle user leaving
             socketRef.current.on("user-left", (id) => {
-                setVideo((videos) => videos.filter((video) => video.socketId !== id))
+                setVideos((videos) => videos.filter((video) => video.socketId !== id))
             })
 
             // handles user joining
@@ -307,7 +307,7 @@ export default function VideoMeetComponent() {
 
                         // if the video stream already exists, update it with the new stream
                         if (videoExists) {
-                            setVideo(videos => {
+                            setVideos(videos => {
                                 const updateVideos = videos.map(video =>
                                     video.socketId === socketListId ? { ...video, stream: event.stream } : video
                                 );
@@ -392,20 +392,25 @@ export default function VideoMeetComponent() {
 
     return (
         <div>
-            {/* main video features */}
-            {askForUsername === true ?
+            {askForUsername ? (
                 <div>
                     <h2>Enter into lobby</h2>
-                    {/* {username} */}
-                    <TextField id="outlined-basic" label="Username" value={username} onChange={(e) => setUsername(e.target.value)} variant="outlined" />
-                    <Button variant="contained" onClick={connect}>Connect</Button>
+                    <TextField
+                        id="outlined-basic"
+                        label="Username"
+                        value={username}
+                        onChange={(e) => setUsername(e.target.value)}
+                        variant="outlined"
+                    />
+                    <Button variant="contained" onClick={connect}>
+                        Connect
+                    </Button>
                     <div>
-                        <video ref={localVideoRef} autoPlay muted></video>
+                        <video ref={localVideoRef} autoPlay muted playsInline></video>
                     </div>
-
-                </div> :
+                </div>
+            ) : (
                 <div className={styles.meetVideoContainer}>
-
                     <div className={styles.buttonContainers}>
                         <IconButton onClick={handleVideo}>
                             {video === true ? <VideocamIcon /> : <VideocamOffIcon />}
@@ -419,13 +424,12 @@ export default function VideoMeetComponent() {
                             {audio === true ? <MicIcon /> : <MicOffIcon />}
                         </IconButton>
 
-                        {screenAvailable === true ?
+                        {screenAvailable && (
                             <IconButton>
-                                {screen === true ? <ScreenShareIcon /> : <StopScreenShareIcon />}
+                                {screen ? <ScreenShareIcon /> : <StopScreenShareIcon />}
                             </IconButton>
-                            : <></>}
+                        )}
 
-                        {/* it it used for the notification purpose and shows the no in notification */}
                         <Badge badgeContent={newMessage} max={999} color="secondary">
                             <IconButton>
                                 <ChatIcon />
@@ -433,24 +437,29 @@ export default function VideoMeetComponent() {
                         </Badge>
                     </div>
 
+                    {/* Local video */}
+                    <video className={styles.meetUserVideo} ref={localVideoRef} autoPlay muted playsInline></video>
 
-                    <video className={styles.meetUserVideo} ref={localVideoRef} autoPlay muted></video>
-                    <div className={styles.conferenceView} key={video.socketId}>
+                    {/* Remote videos */}
+                    <div className={styles.conferenceView}>
                         {videos.map((video) => (
-                            {/* <h2>{video.socketId}</h2> */ }
-                            < video data - socket= { video.socketId }
-                                ref={ref => {
-                            if (ref && video.stream) {
-                                ref.srcObject = video.stream;
-                            }
-                        }}
-                                autoPlay></video>
-                        
-                    ))}
+                            <div key={video.socketId}>
+                                <video
+                                    data-socket={video.socketId}
+                                    ref={ref => {
+                                        if (ref && video.stream) {
+                                            ref.srcObject = video.stream;
+                                        }
+                                    }}
+                                    autoPlay
+                                >
+                                </video>
+                            </div>
+                        ))}
+                    </div>
                 </div>
-                    
-                </div>}
-        </div >
-    )
+            )}
+        </div>
+    );
 }
 
