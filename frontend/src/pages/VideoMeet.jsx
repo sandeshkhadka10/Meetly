@@ -380,6 +380,16 @@ export default function VideoMeetComponent() {
         getMedia();
     }
 
+    // This is useful for turning the camera on/off
+    let handleVideo = () =>{
+        setVideo(!video);
+    }
+
+    // This is useful for turning the audio on/off
+    let handleAudio = () =>{
+        setAudio(!audio);
+    }
+
     return (
         <div>
             {/* main video features */}
@@ -397,7 +407,7 @@ export default function VideoMeetComponent() {
                 <div className={styles.meetVideoContainer}>
 
                     <div className={styles.buttonContainers}>
-                        <IconButton>
+                        <IconButton onClick={handleVideo}>
                             {video === true ? <VideocamIcon /> : <VideocamOffIcon />}
                         </IconButton>
 
@@ -405,7 +415,7 @@ export default function VideoMeetComponent() {
                            <CallEnd/>
                         </IconButton>
 
-                        <IconButton>
+                        <IconButton onClick={handleAudio}>
                             {audio === true ? <MicIcon/> : <MicOffIcon />}
                         </IconButton>
 
