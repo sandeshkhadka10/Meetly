@@ -5,8 +5,14 @@ import Button from "@mui/material/Button";
 import VideocamIcon from "@mui/icons-material/Videocam";
 import VideocamOffIcon from "@mui/icons-material/VideocamOff";
 import CallEnd from "@mui/icons-material/CallEnd";
-import styles from "../styles/videoComponent.module.css";
 import IconButton from "@mui/material/IconButton";
+import MicIcon from "@mui/icons-material/Mic";
+import MicOffIcon from "@mui/icons-material/MicOff";
+import ScreenShareIcon from "@mui/icons-material/ScreenShare";
+import StopScreenShareIcon from "@mui/icons-material/StopScreenShare";
+import Badge from "@mui/material/Badge";
+import ChatIcon from "@mui/icons-material/Chat";
+import styles from "../styles/videoComponent.module.css";
 
 const server_url = "http://localhost:8000";
 
@@ -33,7 +39,7 @@ export default function VideoMeetComponent() {
     let [screenAvailable, setScreenAvailable] = useState();
     let [messages, setMessages] = useState([]);
     let [message, setMessage] = useState("");
-    let [newMessage, setNewMessage] = useState(0);
+    let [newMessage, setNewMessage] = useState(3);
     let [askForUsername, setAskForUsername] = useState(true);
     let [username, setUsername] = useState("");
 
@@ -395,13 +401,26 @@ export default function VideoMeetComponent() {
                             {video === true ? <VideocamIcon /> : <VideocamOffIcon />}
                         </IconButton>
 
-                        <IconButton>
+                        <IconButton style={{color:"red"}}>
                            <CallEnd/>
                         </IconButton>
 
                         <IconButton>
-                            {audio === true ? <VideocamIcon /> : <VideocamOffIcon />}
+                            {audio === true ? <MicIcon/> : <MicOffIcon />}
                         </IconButton>
+
+                        {screenAvailable === true?
+                           <IconButton>
+                            {screen === true? <ScreenShareIcon/> : <StopScreenShareIcon/>}
+                           </IconButton>
+                        : <></>}
+                        
+                        {/* it it used for the notification purpose and shows the no in notification */}
+                        <Badge badgeContent={newMessage} max={999} color="secondary">
+                            <IconButton>
+                                <ChatIcon/>
+                            </IconButton>
+                        </Badge>
                     </div>
 
 
