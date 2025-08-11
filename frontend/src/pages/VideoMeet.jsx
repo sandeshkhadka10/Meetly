@@ -381,12 +381,12 @@ export default function VideoMeetComponent() {
     }
 
     // This is useful for turning the camera on/off
-    let handleVideo = () =>{
+    let handleVideo = () => {
         setVideo(!video);
     }
 
     // This is useful for turning the audio on/off
-    let handleAudio = () =>{
+    let handleAudio = () => {
         setAudio(!audio);
     }
 
@@ -411,43 +411,46 @@ export default function VideoMeetComponent() {
                             {video === true ? <VideocamIcon /> : <VideocamOffIcon />}
                         </IconButton>
 
-                        <IconButton style={{color:"red"}}>
-                           <CallEnd/>
+                        <IconButton style={{ color: "red" }}>
+                            <CallEnd />
                         </IconButton>
 
                         <IconButton onClick={handleAudio}>
-                            {audio === true ? <MicIcon/> : <MicOffIcon />}
+                            {audio === true ? <MicIcon /> : <MicOffIcon />}
                         </IconButton>
 
-                        {screenAvailable === true?
-                           <IconButton>
-                            {screen === true? <ScreenShareIcon/> : <StopScreenShareIcon/>}
-                           </IconButton>
-                        : <></>}
-                        
+                        {screenAvailable === true ?
+                            <IconButton>
+                                {screen === true ? <ScreenShareIcon /> : <StopScreenShareIcon />}
+                            </IconButton>
+                            : <></>}
+
                         {/* it it used for the notification purpose and shows the no in notification */}
                         <Badge badgeContent={newMessage} max={999} color="secondary">
                             <IconButton>
-                                <ChatIcon/>
+                                <ChatIcon />
                             </IconButton>
                         </Badge>
                     </div>
 
 
                     <video className={styles.meetUserVideo} ref={localVideoRef} autoPlay muted></video>
-                    {videos.map((video) => (
-                        <div className={styles.conferenceView} key={video.socketId}>
-                            {/* <h2>{video.socketId}</h2> */}
-                            <video data-socket={video.socketId}
+                    <div className={styles.conferenceView} key={video.socketId}>
+                        {videos.map((video) => (
+                            {/* <h2>{video.socketId}</h2> */ }
+                            < video data - socket= { video.socketId }
                                 ref={ref => {
-                                    if (ref && video.stream) {
-                                        ref.srcObject = video.stream;
-                                    }
-                                }}
+                            if (ref && video.stream) {
+                                ref.srcObject = video.stream;
+                            }
+                        }}
                                 autoPlay></video>
-                        </div>
+                        
                     ))}
+                </div>
+                    
                 </div>}
-        </div>
+        </div >
     )
 }
+
