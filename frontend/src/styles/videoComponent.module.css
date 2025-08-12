@@ -7,7 +7,8 @@
     bottom:10vh;
     height:20vh;
     width:auto;
-    right:0;
+    left:10px;
+    border-radius:20px;
 }
 
 .buttonContainers{
@@ -31,5 +32,26 @@
     width: 40vw;
     height:20vh;
     min-width: 30vw;
-    border-radius: 10px;
+}
+
+.chatRoom{
+    position:absolute;
+    height:90vh;
+    width:20vw;
+    right:10px;
+    border-radius:10px;
+    padding-inline:20px;
+    background:white;
+}
+
+.chatContainer{
+    position:relative;
+    height:100%;
+}
+
+.chattingArea{
+    position:absolute;
+    bottom:8px;
+    display:flex;
+    gap:3px;
 }
