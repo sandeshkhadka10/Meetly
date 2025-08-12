@@ -205,8 +205,8 @@ export default function VideoMeetComponent() {
                 // loops over them and stops each track(camera/mic)
                 tracks.forEach(track => track.stop())
 
-            } catch (error) {
-
+            } catch (e) {
+                console.log(e);
             }
         }
     }
@@ -390,6 +390,71 @@ export default function VideoMeetComponent() {
         setAudio(!audio);
     }
 
+    let getDisplayMediaSuccess = (stream) => {
+        try {
+            window.localStream.getTracks().forEach(track => track.stop());
+        } catch (e) {
+            console.log(e);
+        }
+        window.localStream = stream;
+        localVideoRef.current.srcObject = stream;
+
+        for (let id in connections) {
+            if (id === socketIdRef.current) continue;
+
+            connections[id].addStream(window.localStream);
+            connections[id].createOffer().then((description) => [
+                connections[id].setLocalDescription(description)
+                    .then(() => {
+                        socketRef.current.emit("signal", id, JSON.stringify({ "sdp": connections[id].localDescription }));
+                    })
+                    .catch((e) => {
+                        console.log(e);
+                    })
+            ])
+        }
+        stream.getTracks().forEach(track => track.onended = () => {
+            setScreen(false);
+
+            // tries to stop any remaining tracks from the video element to fully clean up the media stream
+            try {
+                let tracks = localVideoRef.current.srcObject.getTracks();
+                tracks.forEach(track => track.stop())
+            } catch (e) {
+                console.log(e);
+            }
+
+            let blackSilence = (...args) => new MediaStream([black(...args), silence()]);
+            window.localStream = blackSilence();
+            localVideoRef.current.srcObject = window.localStream;
+
+            getUserMedia();
+        })
+    }
+
+    let getDisplayMedia = () => {
+        if (screen) {
+            if (navigator.mediaDevices.getDisplayMedia) {
+                navigator.mediaDevices.getDisplayMedia({ video: true, audio: true })
+                    .then(getDisplayMediaSuccess)
+                    .then((stream) => { })
+                    .catch((e) => {
+                        console.log(e);
+                    })
+            }
+        }
+    }
+
+    useEffect(() => {
+        if (screen !== undefined) {
+            getDisplayMedia();
+        }
+    }, [screen])
+
+    let handleScreen = () => {
+        setScreen(!screen);
+    }
+
     return (
         <div>
             {askForUsername ? (
@@ -424,11 +489,11 @@ export default function VideoMeetComponent() {
                             {audio === true ? <MicIcon /> : <MicOffIcon />}
                         </IconButton>
 
-                        {screenAvailable && (
-                            <IconButton>
+                        {screenAvailable === true ?
+                            <IconButton onClick={handleScreen}>
                                 {screen ? <ScreenShareIcon /> : <StopScreenShareIcon />}
-                            </IconButton>
-                        )}
+                            </IconButton>:<></>
+                        }
 
                         <Badge badgeContent={newMessage} max={999} color="secondary">
                             <IconButton>
