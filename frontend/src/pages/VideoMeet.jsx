@@ -459,6 +459,11 @@ export default function VideoMeetComponent() {
         setModal(!showModal);
     }
 
+    let sendMessage = () =>{
+        socketRef.current.emit("chat-message",message,username);
+        setMessage("");
+    }
+
     return (
         <div>
             {askForUsername ? (
@@ -515,8 +520,9 @@ export default function VideoMeetComponent() {
                             <div className={styles.chatContainer}>
                                 <h1>Chat</h1>
                                 <div className={styles.chattingArea}>
-                                    <TextField id="outlined-basic" label="Enter your chat" variant="outlined" />
-                                    <Button variant="contained">Send</Button>
+                                    {/* {message} */}
+                                    <TextField value={message} onChange={e => setMessage(e.target.value)} id="outlined-basic" label="Enter your chat" variant="outlined" />
+                                    <Button variant="contained" onClick={sendMessage}>Send</Button>
                                 </div>
                             </div>
 
