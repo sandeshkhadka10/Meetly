@@ -387,7 +387,7 @@ export default function VideoMeetComponent() {
         connectToSocketServer();
     }
 
-    let routTo = useNavigate();
+    let routeTo = useNavigate();
 
     let connect = () => {
         setAskForUsername(false);
@@ -483,7 +483,7 @@ export default function VideoMeetComponent() {
             let tracks = localVideoRef.current.srcObject.getTracks();
             tracks.forEach(track => track.stop());
         }catch(e){}
-        routTo("/home");
+        routeTo("/home");
     }
 
     return (
