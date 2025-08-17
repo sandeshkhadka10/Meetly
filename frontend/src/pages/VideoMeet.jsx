@@ -250,8 +250,19 @@ export default function VideoMeetComponent() {
 
     }
 
-    let addMessage = () => {
-
+    let addMessage = (data,sender,socketIdSender) => {
+        setMessages((prevMessages)=>[
+            ...prevMessages,
+            {seender:sender,
+                data:data
+            }
+        ]);
+        
+        // to know whether the message sender is new person or not
+        // and if it is not a new person then we will not use display it as a new message
+        if(socketIdSender !== socketIdRef.current){
+            setMessages((prevMessages)=> prevMessages + 1)
+        }
     }
 
     // it's responsbile for initalizing socket connections and
