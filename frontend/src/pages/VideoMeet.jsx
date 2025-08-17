@@ -253,7 +253,7 @@ export default function VideoMeetComponent() {
     let addMessage = (data,sender,socketIdSender) => {
         setMessages((prevMessages)=>[
             ...prevMessages,
-            {seender:sender,
+            {sender:sender,
                 data:data
             }
         ]);
@@ -261,7 +261,7 @@ export default function VideoMeetComponent() {
         // to know whether the message sender is new person or not
         // and if it is not a new person then we will not use display it as a new message
         if(socketIdSender !== socketIdRef.current){
-            setMessages((prevMessages)=> prevMessages + 1)
+            setNewMessage((prevMessages)=> prevMessages + 1)
         }
     }
 
@@ -471,7 +471,7 @@ export default function VideoMeetComponent() {
     }
 
     let sendMessage = () =>{
-        socketRef.current.emit("chat-message",message,username);
+        socketRef.current.emit("chat-message",message,username,);
         setMessage("");
     }
 
@@ -530,6 +530,18 @@ export default function VideoMeetComponent() {
                         {showModal ? <div className={styles.chatRoom}>
                             <div className={styles.chatContainer}>
                                 <h1>Chat</h1>
+
+                                <div className={styles.chattingDisplay}>
+                                    {messages.length > 0 ? messages.map((item,index)=>{
+                                        return(
+                                            <div key={index} style={{marginBottom:"20px"}}>
+                                                <p style={{fontWeight:"bold"}}>{item.sender}</p>
+                                                <p>{item.data}</p>
+                                            </div>
+                                        )
+                                    }):<p>No messages yet</p>}
+                                </div>
+
                                 <div className={styles.chattingArea}>
                                     {/* {message} */}
                                     <TextField value={message} onChange={e => setMessage(e.target.value)} id="outlined-basic" label="Enter your chat" variant="outlined" />
