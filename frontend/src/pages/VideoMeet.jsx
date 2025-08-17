@@ -13,6 +13,7 @@ import StopScreenShareIcon from "@mui/icons-material/StopScreenShare";
 import Badge from "@mui/material/Badge";
 import ChatIcon from "@mui/icons-material/Chat";
 import styles from "../styles/videoComponent.module.css";
+import { useNavigate } from "react-router";
 
 const server_url = "http://localhost:8000";
 
@@ -386,6 +387,8 @@ export default function VideoMeetComponent() {
         connectToSocketServer();
     }
 
+    let routTo = useNavigate();
+
     let connect = () => {
         setAskForUsername(false);
         getMedia();
@@ -475,6 +478,14 @@ export default function VideoMeetComponent() {
         setMessage("");
     }
 
+    let handleEndCall = () =>{
+        try{
+            let tracks = localVideoRef.current.srcObject.getTracks();
+            tracks.forEach(track => track.stop());
+        }catch(e){}
+        routTo("/home");
+    }
+
     return (
         <div>
             {askForUsername ? (
@@ -501,7 +512,7 @@ export default function VideoMeetComponent() {
                             {video === true ? <VideocamIcon /> : <VideocamOffIcon />}
                         </IconButton>
 
-                        <IconButton style={{ color: "red" }}>
+                        <IconButton onClick={handleEndCall} style={{ color: "red" }}>
                             <CallEnd />
                         </IconButton>
 
