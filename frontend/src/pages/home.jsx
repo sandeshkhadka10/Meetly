@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import "../App.css";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
+import TextField from "@mui/material/TextField";
 import RestoreIcon from '@mui/icons-material/Restore';
 
 function HomeComponent(){
@@ -19,19 +20,33 @@ function HomeComponent(){
         <div>
             <div className="navBar">
                 <div style={{display:"flex"}}>
-                    <h3>Meetly</h3>
+                    <h2>Meetly</h2>
                 </div>
                 <div style={{display:"flex",alignItems:"center"}}>
                     <IconButton>
                         <RestoreIcon/>
-                        <p style={{fontSize:"18px"}}>History</p>
+                        <p style={{fontSize:"1rem"}}>History</p>
                     </IconButton>
                     <Button onClick={()=>{
                         localStorage.removeItem("token")
                         navigate("/auth")
                     }}>
-                        Logout
+                        <p>Logout</p>
                     </Button>
+                </div>
+            </div>
+            <div className="meetContainer">
+                <div className="leftPanel">
+                    <div>
+                        <h2>Providing Quality Video Call Just Like Quality Education</h2>
+                        <div style={{display:"flex",gap:"10px"}}>
+                            <TextField onChange={e => setMeetingCode(e.target.value)} id="outlined-basic" label="Outlined" variant="outlined" />
+                            <Button onClick={handleJoinVideoCall} variant="contained">Join</Button>
+                        </div>
+                    </div>
+                </div>
+                <div className="rightPanel">
+                    <img src="/singleMobile.png" alt=""/>
                 </div>
             </div>
         </div>

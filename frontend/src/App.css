@@ -60,7 +60,37 @@
   display:flex;
   align-items:center;
   justify-content:space-between;
-  padding-right:20px;
   text-align:center;
-  padding-inline:5px;
+  padding-inline: 1.2rem;
+  padding-block: 1.3rem;
+}
+
+.navBar h2{
+  font-size: 1.8rem;
+  font-weight: 500;
+}
+
+.meetContainer{
+  display:flex;
+  padding-inline:20px;
+  height:80vh;
+  gap:10vw;
+  justify-content:center;
+}
+
+.leftPanel{
+  height:100%;
+  display:flex;
+  align-items:center;
+}
+
+.rightPanel{
+  display:flex;
+  align-items:center;
+}
+
+.rightPanel > img{
+  width:45vw;
+  height:auto;
+  border-radius:20px;
 }
