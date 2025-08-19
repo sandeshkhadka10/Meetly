@@ -29,8 +29,7 @@ export default function History() {
         const day = date.getDate().toString().padStart(2,"0");
         const month = (date.getMonth() + 1).toString().padStart(2,"0");
         const year = date.getFullYear();
-
-        // return `${day}/${month}/${year}`;
+        return `${day}/${month}/${year}`;
     }
 
     return (
@@ -41,7 +40,7 @@ export default function History() {
                 <HomeIcon />
             </IconButton>
             {
-                meetings.map((e,i) => {
+                (meetings.length !== 0)?meetings.map((e,i) => {
                     return (
                         <>
                             <Card key={i} variant="outlined">
@@ -56,7 +55,7 @@ export default function History() {
                             </Card>
                         </>
                     )
-                })
+                }):<></>
             }
         </div>
     )
