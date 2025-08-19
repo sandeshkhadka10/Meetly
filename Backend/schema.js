@@ -15,6 +15,6 @@ export const usersLoginSchema = Joi.object({
 
 // for meeting
 export const usersMeetingSchema = Joi.object({
-    user_id:Joi.string().required(),
+    token:Joi.string().required(),
     meetingCode:Joi.string().required()
 });
