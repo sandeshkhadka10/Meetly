@@ -26,7 +26,9 @@ function HomeComponent(){
                     <h2>Meetly</h2>
                 </div>
                 <div style={{display:"flex",alignItems:"center"}}>
-                    <IconButton>
+                    <IconButton onClick={()=>{
+                        navigate("/history")
+                    }}>
                         <RestoreIcon/>
                         <p style={{fontSize:"1rem"}}>History</p>
                     </IconButton>
