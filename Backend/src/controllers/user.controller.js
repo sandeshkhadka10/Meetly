@@ -4,8 +4,8 @@ import bcrypt,{hash} from "bcrypt";
 import crypto from "crypto";
 import { Meeting } from "../models/meeting.models.js";
 
-const register = async(req,res)=>{
-    const {name, username,password} = req.body;
+export const register = async(req,res)=>{
+    const {name,username,password} = req.body;
     try{
         const existingUser = await User.findOne({username});
         if(existingUser){
@@ -24,7 +24,7 @@ const register = async(req,res)=>{
     }
 };
 
-const login = async(req,res)=>{
+export const login = async(req,res)=>{
     const {username,password} = req.body;
     if(!username || !password){
         return res.status(400).json({message:"Please input the value"});
@@ -52,7 +52,7 @@ const login = async(req,res)=>{
     }
 };
 
-const addToHistory = async(req,res)=>{
+export const addToHistory = async(req,res)=>{
     const {token,meeting_code} = req.body;
     try{
         const user = await User.findOne({token:token});
@@ -71,7 +71,7 @@ const addToHistory = async(req,res)=>{
     }
 };
 
-const getUserHistory = async(req,res)=>{
+export const getUserHistory = async(req,res)=>{
     const {token} = req.query;
     try{
         const user = await User.findOne({token:token});
@@ -82,4 +82,3 @@ const getUserHistory = async(req,res)=>{
     }
 }
 
-export {register,login,addToHistory,getUserHistory};
