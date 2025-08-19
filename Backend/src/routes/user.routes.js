@@ -12,7 +12,7 @@ router.route("/login")
   .post(validateLogin,wrapAsync(login));
 
 router.route("/add_to_activity")
-  .post(validateMeeting,wrapAsync(addToHistory));
+  .post(wrapAsync(addToHistory));
 
 router.route("/get_all_activity")
   .get(getUserHistory);
