@@ -1,20 +1,20 @@
-const Joi = require("joi");
+import Joi from "joi";
 
 // for register
-module.exports.usersRegisterSchema = Joi.object({
+export const usersRegisterSchema = Joi.object({
     name:Joi.string().required(),
     username:Joi.string().required(),
     password:Joi.string().required()
 });
 
 // for login
-module.exports.usersLoginSchema = Joi.object({
+export const usersLoginSchema = Joi.object({
     username:Joi.string().required(),
     password:Joi.string().required()
 });
 
 // for meeting
-module.exports.meetingsSchema = Joi.object({
+export const usersMeetingSchema = Joi.object({
     user_id:Joi.string().required(),
     meetingCode:Joi.string().required()
 });

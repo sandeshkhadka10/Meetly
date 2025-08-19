@@ -26,6 +26,12 @@ app.use("/api/v1/users",userRoutes);
 //   return res.json({ hello: "world" });
 // });
 
+app.use((err, req, res, next) => {
+  const { statusCode = 500, message = "Something went wrong" } = err;
+  res.status(statusCode).json({ error: message });
+});
+
+
 const start = async () => {
   try {
     app.set("mongo_user");
