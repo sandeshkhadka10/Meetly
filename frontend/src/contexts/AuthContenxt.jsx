@@ -38,7 +38,7 @@ export const AuthProvider = ({ children }) => {
                 username: username,
                 password: password
             });
-            if (request.status === httpStatus.OK) {
+            if (request.status === httpStatus.CREATED) {
                 setUserData({username});
                 router("/home");
             }
@@ -48,34 +48,41 @@ export const AuthProvider = ({ children }) => {
         }
     }
 
+    const handleLogout = async()=>{
+        try{
+            let request = await client.get("/logout");
+            if(request.status === httpStatus.CREATED){
+                setUserData(null);
+                router("/");
+            }
+        }catch(error){
+             throw error.response?.data || error;
+        }
+
+    }
+
     const addToUserHistory = async (meetingCode) => {
         try {
             let request = await client.post("/add_to_activity", {
-                token: localStorage.getItem("token"),
                 meeting_code: meetingCode
-
             });
-            return request;
+            return request.data;
         } catch (error) {
-            throw error;
+            throw error.response?.data || error;
         }
     }
 
     const getHistoryOfUser = async () => {
         try {
-            let request = await client.get("/get_all_activity", {
-                params: {
-                    token: localStorage.getItem("token")
-                }
-            });
+            let request = await client.get("/get_all_activity");
             return request.data;
         } catch (error) {
-            throw error;
+            throw error.response?.data || error;
         }
     }
 
     const data = {
-        userData, setUserData, handleRegister, handleLogin, addToUserHistory, getHistoryOfUser
+        userData, setUserData, handleRegister, handleLogin, handleLogout, addToUserHistory, getHistoryOfUser
     }
     return (
         <AuthContext.Provider value={data}>
