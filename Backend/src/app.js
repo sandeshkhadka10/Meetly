@@ -6,7 +6,9 @@ import cors from "cors";
 import {connectToSocket} from "./controllers/socketManager.js";
 import userRoutes from "./routes/user.routes.js";
 import cookieParser from "cookie-parser";
+import dotenv from "dotenv";
 
+dotenv.config();
 
 const app = express();
 const server = createServer(app);
@@ -14,6 +16,8 @@ const server = createServer(app);
 // attaching the socket.io to the httpserver
 // const io = new Server(server);
 const io = connectToSocket(server);
+
+const mongo_url = process.env.MONGO_URL;
 
 app.set("port", process.env.PORT || 8000);
 
@@ -40,7 +44,7 @@ const start = async () => {
   try {
     app.set("mongo_user");
     const connectionDb = await mongoose.connect(
-      "mongodb+srv://attkhadka551:sTnWP32YKkBNoFxW@cluster0.bmhjx04.mongodb.net/"
+      mongo_url
     );
     console.log(`Mongo Connected DB Host:${connectionDb.connection.host}`);
     server.listen(app.get("port"), () => {
