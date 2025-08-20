@@ -59,15 +59,14 @@ export const Logout = (req, res) => {
 };
 
 export const addToHistory = async (req, res) => {
-  const { token, meeting_code } = req.body;
+  const {meeting_code } = req.body;
 
-  // it is done to decode the user id
-  const decoded = jwt.verify(token, process.env.TOKEN_KEY);
-  const user = await User.findOne(decoded._id);
-  if (!user) {
-    return res.status(httpStatus.NOT_FOUND).json({ message: "User not found" });
+  // userVerification is already attached to the user
+  const user = req.user;
+  if(!user){
+    return res.status(httpStatus.UNAUTHORIZED).json({message:"Unauthorized User"});
   }
-
+  
   const newMeeting = new Meeting({
     user_id: user.username,
     meetingCode: meeting_code,
@@ -81,9 +80,10 @@ export const addToHistory = async (req, res) => {
 };
 
 export const getUserHistory = async (req, res) => {
-  const { token } = req.query;
-  const decoded = jwt.verify(token, process.env.TOKEN_KEY);
-  const user = await User.findOne(decoded._id);
+  const user = req.user;
+  if(!user){
+    return res.status(httpStatus.UNAUTHORIZED).json({message:"Unauthorized User"});
+  }
   const meeting = await Meeting.find({ user_id: user.username });
   res.json(meeting);
 };
