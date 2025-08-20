@@ -19,6 +19,9 @@ export const register = async (req, res) => {
     username: username,
     password: hashedPassword,
   });
+
+  await newUser.save();
+  
   const token = createSecretToken(newUser._id);
   res.cookie("token", token, {
     httpOnly: true,
