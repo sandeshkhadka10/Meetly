@@ -15,6 +15,6 @@ router.route("/add_to_activity")
   .post(wrapAsync(addToHistory));
 
 router.route("/get_all_activity")
-  .get(getUserHistory);
+  .get(wrapAsync(getUserHistory));
 
 export default router;
