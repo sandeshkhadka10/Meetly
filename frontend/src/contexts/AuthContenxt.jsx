@@ -6,8 +6,9 @@ import httpStatus from "http-status";
 export const AuthContext = createContext({});
 
 const client = axios.create({
-    baseURL: "http://localhost:8000/api/v1/users"
-})
+    baseURL: "http://localhost:8000/api/v1/users",
+    withCredentials:true
+});
 
 export const AuthProvider = ({ children }) => {
     const authContext = useContext(AuthContext);
@@ -27,7 +28,7 @@ export const AuthProvider = ({ children }) => {
                 return request.data.message;
             }
         } catch (error) {
-            throw error;
+            throw error.response?.data || error;
         }
     }
 
@@ -38,12 +39,12 @@ export const AuthProvider = ({ children }) => {
                 password: password
             });
             if (request.status === httpStatus.OK) {
-                localStorage.setItem("token", request.data.token);
+                setUserData({username});
                 router("/home");
             }
 
         } catch (error) {
-            throw error;
+            throw error.response?.data || error;
         }
     }
 
