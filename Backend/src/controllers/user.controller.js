@@ -25,6 +25,7 @@ export const register = async (req, res) => {
   const token = createSecretToken(newUser._id);
   res.cookie("token", token, {
     httpOnly: true,
+    maxAge: 24 * 60 * 60 * 1000
   });
   res.status(httpStatus.CREATED).json({ message: "User Registered", newUser });
 };
@@ -48,6 +49,7 @@ export const login = async (req, res) => {
   const token = createSecretToken(user._id);
   res.cookie("token", token, {
     httpOnly: true,
+    maxAge: 24 * 60 * 60 * 1000,
   });
   res
     .status(httpStatus.CREATED)
@@ -71,7 +73,7 @@ export const addToHistory = async (req, res) => {
   }
   
   const newMeeting = new Meeting({
-    user_id: user.username,
+    user_id: req.body.username || req.user.username,
     meetingCode: meeting_code,
   });
 
