@@ -13,8 +13,6 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import {AuthContext} from '../contexts/AuthContenxt';
-import Snackbar from '@mui/material/Snackbar';
-
 
 const defaultTheme = createTheme();
 
@@ -183,14 +181,6 @@ export default function Authentication() {
           </Box>
         </Paper>
       </Box>
-
-      <Snackbar
-        open={open}
-        autoHideDuration={4000}
-        onClose={() => setOpen(false)}
-        message={message}
-      />
-
     </ThemeProvider>
   );
 }

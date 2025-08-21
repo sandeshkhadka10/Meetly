@@ -73,7 +73,7 @@ export const addToHistory = async (req, res) => {
   }
   
   const newMeeting = new Meeting({
-    user_id: req.body.username || req.user.username,
+    user_id: req.user.username,
     meetingCode: meeting_code,
   });
 
