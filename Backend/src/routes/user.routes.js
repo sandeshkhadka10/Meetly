@@ -21,4 +21,8 @@ router.route("/add_to_activity")
 router.route("/get_all_activity")
   .get(userVerification,wrapAsync(getUserHistory));
 
+router.route("/auth/verfiy",userVerification,(req,res)=>{
+  res.json({status:true,user:req.user});
+});
+
 export default router;

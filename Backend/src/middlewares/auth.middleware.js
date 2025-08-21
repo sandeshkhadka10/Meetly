@@ -15,12 +15,12 @@ export const userVerification = async(req,res,next)=>{
             return res.status(httpStatus.FORBIDDEN).json({status:false,message:"Invalid Token"});
         }
 
-        const existingUser = await UsersModel.findById(data._id);
-        if(existingUser){
+        const user = await UsersModel.findById(data._id);
+        if(!user){
             return res.status(httpStatus.NOT_FOUND).json({status:false,message:"User not found"});
         }
 
-        req.user = existingUser;
+        req.user = user;
         next();
     });
 };
