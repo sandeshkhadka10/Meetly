@@ -13,6 +13,10 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import {AuthContext} from '../contexts/AuthContenxt';
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { useNavigate } from "react-router-dom";
+
 
 const defaultTheme = createTheme();
 
@@ -30,31 +34,41 @@ export default function Authentication() {
 
   const {handleRegister, handleLogin} = React.useContext(AuthContext);
 
+  const router = useNavigate();
+
   let handleAuth = async() =>{
     try{
       if(formState === 0){
         let result = await handleLogin(username,password);
-        setMessage(result);
-        setOpen(true);
+        // setMessage(result);
+        // setOpen(true);
         setUsername("");
         setPassword("");
-        setError("");
+        // setError("");
       }
-      if(formState === 1){
+      else if(formState === 1){
         let result = await handleRegister(name,username,password);
-        setMessage(result);
-        setOpen(true);
+        toast.success(result,{
+          position:"top-right",
+          autoClose:2500
+        });
+        setTimeout(() => {
+          router("/home");
+        }, 1000);
+        // setMessage(result);
+        // setOpen(true);
         setName("");
         setUsername("");
         setPassword("");
-        setError("");
-        setFormState(0);
+        // setError("");
+        // setFormState(0);
       }
     }catch(error){
       let message = (error.response.data.message);
-      setError(message);
+      // setError(message);
+      toast.error(error);
     }
-  }
+  };
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -180,6 +194,7 @@ export default function Authentication() {
             </Box>
           </Box>
         </Paper>
+        <ToastContainer/>
       </Box>
     </ThemeProvider>
   );

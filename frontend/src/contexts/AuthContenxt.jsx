@@ -25,7 +25,7 @@ export const AuthProvider = ({ children }) => {
                 password: password
             });
             if (request.status === httpStatus.CREATED) {
-                router("/home");
+                return request.data.message;
             }
         } catch (error) {
             throw error.response?.data || error;
