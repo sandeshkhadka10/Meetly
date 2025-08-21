@@ -30,13 +30,9 @@ router
   .route("/get_all_activity")
   .get(userVerification, wrapAsync(getUserHistory));
 
-router.get("/auth/verify", userVerification, (req, res) => {
-  res.json({ status: true, user: req.user });
-});
-
-// router.route("/auth/verify")
-//   .get(userVerification,(req,res)=>{
-//     res.json({status:true,user:req.user});
-//   })
+router.route("/auth/verify")
+  .get(userVerification,(req,res)=>{
+    res.json({status:true,user:req.user});
+  });
 
 export default router;
