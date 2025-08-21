@@ -28,7 +28,7 @@ export const AuthProvider = ({ children }) => {
                 return request.data.message;
             }
         } catch (error) {
-            throw error.response?.data || error;
+            throw error.response?.data?.message;
         }
     }
 
@@ -40,11 +40,11 @@ export const AuthProvider = ({ children }) => {
             });
             if (request.status === httpStatus.CREATED) {
                 setUserData({username});
-                router("/home");
+                return request.data.message
             }
 
         } catch (error) {
-            throw error.response?.data || error;
+            throw error.response?.data?.message;
         }
     }
 
@@ -56,7 +56,7 @@ export const AuthProvider = ({ children }) => {
                 router("/");
             }
         }catch(error){
-             throw error.response?.data || error;
+            throw error.response?.data?.message;
         }
 
     }
@@ -68,7 +68,7 @@ export const AuthProvider = ({ children }) => {
             });
             return request.data;
         } catch (error) {
-            throw error.response?.data || error;
+            throw error.response?.data?.message;
         }
     }
 
@@ -77,7 +77,7 @@ export const AuthProvider = ({ children }) => {
             let request = await client.get("/get_all_activity");
             return request.data;
         } catch (error) {
-            throw error.response?.data || error;
+            throw error.response?.data?.message;
         }
     }
 

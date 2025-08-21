@@ -29,9 +29,6 @@ export default function Authentication() {
 
   const [formState,setFormState] = React.useState(0);
   
-  // this is for snackbar
-  const [open,setOpen] = React.useState(false);
-
   const {handleRegister, handleLogin} = React.useContext(AuthContext);
 
   const router = useNavigate();
@@ -40,11 +37,15 @@ export default function Authentication() {
     try{
       if(formState === 0){
         let result = await handleLogin(username,password);
-        // setMessage(result);
-        // setOpen(true);
+        toast.success(result,{
+          position:"top-right",
+          autoClose:2500
+        });
+        setTimeout(() => {
+          router("/home");
+        }, 2000);
         setUsername("");
         setPassword("");
-        // setError("");
       }
       else if(formState === 1){
         let result = await handleRegister(name,username,password);
@@ -54,18 +55,12 @@ export default function Authentication() {
         });
         setTimeout(() => {
           router("/home");
-        }, 1000);
-        // setMessage(result);
-        // setOpen(true);
+        }, 2000);
         setName("");
         setUsername("");
         setPassword("");
-        // setError("");
-        // setFormState(0);
       }
     }catch(error){
-      let message = (error.response.data.message);
-      // setError(message);
       toast.error(error);
     }
   };

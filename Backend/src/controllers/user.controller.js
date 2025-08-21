@@ -11,7 +11,7 @@ export const register = async (req, res) => {
   const { name, username, password } = req.body;
   const existingUser = await User.findOne({ username });
   if (existingUser) {
-    return res.status(httpStatus.FOUND).json({ message: "User already exits" });
+    return res.status(httpStatus.CONFLICT).json({ message: "User already exits" });
   }
   const hashedPassword = await bcrypt.hash(password, 10);
   const newUser = new User({
