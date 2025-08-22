@@ -7,6 +7,8 @@ import IconButton from "@mui/material/IconButton";
 import TextField from "@mui/material/TextField";
 import RestoreIcon from '@mui/icons-material/Restore';
 import { AuthContext } from "../contexts/AuthContenxt";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function HomeComponent(){
     let navigate = useNavigate();
@@ -53,6 +55,7 @@ function HomeComponent(){
                     <img src="/singleMobile.png" alt=""/>
                 </div>
             </div>
+            <ToastContainer/>
         </div>
     )
 }

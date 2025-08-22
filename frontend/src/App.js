@@ -7,10 +7,13 @@ import History from './pages/history';
 import { AuthProvider } from './contexts/AuthContenxt';
 import VideoMeetComponent from './pages/VideoMeet';
 import HomeComponent from './pages/home';
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function App() {
   return (
     <>
+    <ToastContainer position="top-right" autoClose={2500} />
     <Router>
       <AuthProvider>
       <Routes>

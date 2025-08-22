@@ -2,6 +2,8 @@ import React, { createContext, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import httpStatus from "http-status";
+import { toast} from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export const AuthContext = createContext({});
 
@@ -25,10 +27,13 @@ export const AuthProvider = ({ children }) => {
                 password: password
             });
             if (request.status === httpStatus.CREATED) {
-                return request.data.message;
+                toast.success(request.data.message);
+                setTimeout(()=>{
+                    router("/home");
+                },2500);
             }
         } catch (error) {
-            throw error.response?.data?.message;
+            toast.error(error.response?.data?.message);
         }
     }
 
@@ -40,11 +45,14 @@ export const AuthProvider = ({ children }) => {
             });
             if (request.status === httpStatus.CREATED) {
                 setUserData({username});
-                return request.data.message
+                toast.success(request.data.message);
+                setTimeout(() => {
+                    router("/home");
+                },2500);
             }
 
         } catch (error) {
-            throw error.response?.data?.message;
+            toast.error(error.response?.data?.message);
         }
     }
 
@@ -53,10 +61,13 @@ export const AuthProvider = ({ children }) => {
             let request = await client.get("/logout");
             if(request.status === httpStatus.CREATED){
                 setUserData(null);
-                router("/");
+                toast.success(request.data.message);
+                setTimeout(() => {
+                    router("/");
+                },2500); 
             }
         }catch(error){
-            throw error.response?.data?.message;
+            toast.error(error.response?.data?.message);
         }
 
     }

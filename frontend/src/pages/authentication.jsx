@@ -15,8 +15,6 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import {AuthContext} from '../contexts/AuthContenxt';
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useNavigate } from "react-router-dom";
-
 
 const defaultTheme = createTheme();
 
@@ -25,43 +23,26 @@ export default function Authentication() {
   const [username,setUsername] = React.useState();
   const [password,setPassword] = React.useState();
   const [error,setError] = React.useState();
-  const [message,setMessage] = React.useState();
-
+  
   const [formState,setFormState] = React.useState(0);
   
   const {handleRegister, handleLogin} = React.useContext(AuthContext);
-
-  const router = useNavigate();
 
   let handleAuth = async() =>{
     try{
       if(formState === 0){
         let result = await handleLogin(username,password);
-        toast.success(result,{
-          position:"top-right",
-          autoClose:2500
-        });
-        setTimeout(() => {
-          router("/home");
-        }, 2000);
         setUsername("");
         setPassword("");
       }
       else if(formState === 1){
         let result = await handleRegister(name,username,password);
-        toast.success(result,{
-          position:"top-right",
-          autoClose:2500
-        });
-        setTimeout(() => {
-          router("/home");
-        }, 2000);
         setName("");
         setUsername("");
         setPassword("");
       }
     }catch(error){
-      toast.error(error);
+      throw error;
     }
   };
 
