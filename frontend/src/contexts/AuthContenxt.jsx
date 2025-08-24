@@ -50,7 +50,6 @@ export const AuthProvider = ({ children }) => {
                     router("/home");
                 },2500);
             }
-
         } catch (error) {
             toast.error(error.response?.data?.message);
         }
