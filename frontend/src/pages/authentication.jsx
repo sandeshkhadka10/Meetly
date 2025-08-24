@@ -22,7 +22,8 @@ export default function Authentication() {
   const [name,setName] = React.useState();
   const [username,setUsername] = React.useState();
   const [password,setPassword] = React.useState();
-  const [error,setError] = React.useState();
+  const [loginError,setLoginError] = React.useState();
+  const [registerError,setRegisterError] = React.useState();
   
   const [formState,setFormState] = React.useState(0);
   
@@ -31,11 +32,40 @@ export default function Authentication() {
   let handleAuth = async() =>{
     try{
       if(formState === 0){
+        if(!username && !password){
+          setLoginError("Username and password are required");
+          return;
+        }
+        else if(!username){
+          setLoginError("Username is required");
+          return;
+        }else if(!password){
+          setLoginError("Password is required");
+          return;
+        }
+        setLoginError("");
+
         let result = await handleLogin(username,password);
         setUsername("");
         setPassword("");
       }
       else if(formState === 1){
+        if(!name && !username && !password){
+          setRegisterError("Full name, username and password are required");
+          return;
+        }
+        else if(!username && !password){
+          setRegisterError("Username and password are required");
+          return;
+        }else if(!username){
+          setRegisterError("Username is required");
+          return;
+        }else if(!password){
+          setRegisterError("Password is required");
+          return;
+        }
+        setRegisterError("");
+
         let result = await handleRegister(name,username,password);
         setName("");
         setUsername("");
@@ -140,10 +170,10 @@ export default function Authentication() {
                 label="Remember me"
                 sx={{ mt: 1 }}
               /> */}
-              
-              {/* it is for displaying error message at the signup or signin */}
-              <p style={{color:"red"}}>{error}</p>
 
+              {formState === 0 && <p style={{color:"red"}}>{loginError}</p>}
+              {formState === 1 && <p style={{color:"red"}}>{registerError}</p>}
+              
               <Button
                 type="button"
                 fullWidth
