@@ -46,6 +46,14 @@ export const login = async (req, res) => {
       .status(httpStatus.UNAUTHORIZED)
       .json({ message: "Incorrect email or password" });
   }
+  
+  // these is done to avoid multiple login by same user
+  if(user.isLoggedIn){
+    return res.status(httpStatus.FORBIDDEN).json({message:"These user is already loggedIn"});
+  }
+  user.isLoggedIn = true;
+  await user.save();
+
   const token = createSecretToken(user._id);
   res.cookie("token", token, {
     httpOnly: true,
@@ -56,7 +64,12 @@ export const login = async (req, res) => {
     .json({ message: "User logged in successfully" });
 };
 
-export const logout = (req, res) => {
+export const logout = async(req, res) => {
+  const user = await User.findById(req.user._id);
+  if(user){
+    user.isLoggedIn = false;
+    await user.save();
+  }
   res.clearCookie("token", {
     httpOnly: true,
   });

@@ -14,6 +14,10 @@ const userSchema = new Schema(
         password:{
             type:String,
             required:true
+        },
+        isLoggedIn:{
+            type:Boolean,
+            default:false
         }
     }
 )

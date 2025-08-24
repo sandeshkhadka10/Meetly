@@ -20,7 +20,7 @@ router.route("/register").post(validateRegister, wrapAsync(register));
 
 router.route("/login").post(validateLogin, wrapAsync(login));
 
-router.route("/logout").get(logout);
+router.route("/logout").get(userVerification,logout);
 
 router
   .route("/add_to_activity")
