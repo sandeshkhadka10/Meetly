@@ -32,6 +32,9 @@ export const register = async (req, res) => {
 
 export const login = async (req, res) => {
   const { username, password } = req.body;
+  if (!username && !password) {
+    return res.status(httpStatus.BAD_REQUEST).json({ message: "All fields are required" });
+  }
   const user = await User.findOne({ username });
   if (!user) {
     return res.status(httpStatus.NOT_FOUND).json({ message: "User not found" });
