@@ -15,10 +15,11 @@ function HomeComponent(){
 
     const [meetingCode,setMeetingCode] = useState("");
     const {addToUserHistory,handleLogout} = useContext(AuthContext);
+    const [meetingCodeError, setMeetingCodeError] = useState("");
 
     let handleJoinVideoCall = async () =>{
         if(!meetingCode){
-            toast.error("Meeting ID is required!");
+            setMeetingCodeError("Create or Enter the meeting id!");
             return;
         }
         await addToUserHistory(meetingCode);
@@ -53,6 +54,7 @@ function HomeComponent(){
                             <TextField onChange={e => setMeetingCode(e.target.value)} id="outlined-basic" label="Outlined" variant="outlined"/>
                             <Button onClick={handleJoinVideoCall} variant="contained">Join</Button>
                         </div>
+                        {<p style={{color:"red"}}>{meetingCodeError}</p>}
                     </div>
                 </div>
                 <div className="rightPanel">

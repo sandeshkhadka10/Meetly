@@ -43,6 +43,7 @@ export default function VideoMeetComponent() {
     let [newMessage, setNewMessage] = useState(3);
     let [askForUsername, setAskForUsername] = useState(true);
     let [username, setUsername] = useState("");
+    let [usernameError, setUsernameError] = useState("");
 
     const videoRef = useRef([]);
 
@@ -390,6 +391,10 @@ export default function VideoMeetComponent() {
     let routeTo = useNavigate();
 
     let connect = () => {
+        if(!username){
+            setUsernameError("Username should be entered");
+            return;
+        }
         setAskForUsername(false);
         getMedia();
     }
@@ -501,6 +506,7 @@ export default function VideoMeetComponent() {
                     <Button variant="contained" onClick={connect}>
                         Connect
                     </Button>
+                    {<p style={{color:"red"}}>{usernameError}</p>}
                     <div>
                         <video ref={localVideoRef} autoPlay muted playsInline></video>
                     </div>
