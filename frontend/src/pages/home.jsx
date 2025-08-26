@@ -7,7 +7,7 @@ import IconButton from "@mui/material/IconButton";
 import TextField from "@mui/material/TextField";
 import RestoreIcon from '@mui/icons-material/Restore';
 import { AuthContext } from "../contexts/AuthContenxt";
-import { ToastContainer } from "react-toastify";
+import { toast,ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 function HomeComponent(){
@@ -17,6 +17,10 @@ function HomeComponent(){
     const {addToUserHistory,handleLogout} = useContext(AuthContext);
 
     let handleJoinVideoCall = async () =>{
+        if(!meetingCode){
+            toast.error("Meeting ID is required!");
+            return;
+        }
         await addToUserHistory(meetingCode);
         navigate(`/${meetingCode}`);
     }
@@ -46,7 +50,7 @@ function HomeComponent(){
                     <div>
                         <h2>Providing Quality Video Call Just Like Quality Education</h2>
                         <div style={{display:"flex",gap:"10px"}}>
-                            <TextField onChange={e => setMeetingCode(e.target.value)} id="outlined-basic" label="Outlined" variant="outlined" />
+                            <TextField onChange={e => setMeetingCode(e.target.value)} id="outlined-basic" label="Outlined" variant="outlined"/>
                             <Button onClick={handleJoinVideoCall} variant="contained">Join</Button>
                         </div>
                     </div>
