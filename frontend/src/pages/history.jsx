@@ -10,15 +10,20 @@ import HomeIcon from "@mui/icons-material/Home";
 export default function History() {
     const { getHistoryOfUser } = useContext(AuthContext);
     const [meetings, setMeetings] = useState([]);
+    const [historyError,setHistoryError] = useState("");
     const routeTo = useNavigate();
 
     useEffect(() => {
         const fetchHistory = async () => {
             try {
                 const history = await getHistoryOfUser();
+                if(history.length === 0){
+                    setHistoryError("No history for the related user");
+                    return;
+                }
                 setMeetings(history);
-            } catch {
-                // implement SnackBar
+            } catch(error){
+                console.log(error);
             }
         }
         fetchHistory();
@@ -39,6 +44,7 @@ export default function History() {
             }}>
                 <HomeIcon />
             </IconButton>
+            {<p style={{color:"red"}}>{historyError}</p>}
             {
                 (meetings.length !== 0)?meetings.map((e,i) => {
                     return (

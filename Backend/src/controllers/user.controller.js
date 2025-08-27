@@ -100,6 +100,7 @@ export const getUserHistory = async (req, res) => {
   if(!user){
     return res.status(httpStatus.UNAUTHORIZED).json({message:"Unauthorized User"});
   }
+  // here find will return in array format
   const meeting = await Meeting.find({ user_id: user.username });
   res.json(meeting);
 };
