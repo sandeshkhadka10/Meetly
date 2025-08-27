@@ -92,7 +92,7 @@ export const addToHistory = async (req, res) => {
 
   return res
     .status(httpStatus.CREATED)
-    .json({ message: "Added code to history" });
+    .json({ message: "Added user detail to history" });
 };
 
 export const getUserHistory = async (req, res) => {

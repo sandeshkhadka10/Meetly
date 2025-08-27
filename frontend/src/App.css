@@ -162,6 +162,7 @@
   }
 }
 
+/* this is used in home.jsx */
 .navBar{
   display:flex;
   align-items:center;
