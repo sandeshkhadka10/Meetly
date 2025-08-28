@@ -281,4 +281,144 @@
   }
 }
 
+/* Main Content */
+.meetVideoContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: black;
+  height: 100vh;
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Control buttons row */
+.buttonContainers {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin: 1rem 0;
+  flex-wrap: wrap;
+}
+
+/* Local video */
+.meetUserVideo {
+  width: 100%;
+  max-width: 500px;
+  height: auto;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+  margin-bottom: 1rem;
+}
+
+/* Remote video grid */
+.conferenceView {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+  width: 100%;
+  padding: 1rem;
+  box-sizing: border-box;
+}
+
+/* Each remote video */
+.conferenceView video {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  background: #000;
+  object-fit: cover;
+}
+
+/* Chat modal */
+.chatRoom {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 100%;
+  max-width: 350px;
+  height: 100%;
+  background: #1e1e1e;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  z-index: 10;
+  box-shadow: -4px 0 10px rgba(0,0,0,0.5);
+}
+
+.chatContainer {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 1rem;
+  box-sizing: border-box;
+}
+
+.chatContainer h1 {
+  margin-bottom: 1rem;
+  font-size: 1.2rem;
+}
+
+.chattingDisplay {
+  flex: 1;
+  overflow-y: auto;
+  margin-bottom: 1rem;
+}
+
+.chattingArea {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.chattingArea input,
+.chattingArea .MuiTextField-root {
+  flex: 1;
+}
+
+/* ======================
+   RESPONSIVE DESIGN
+====================== */
+
+/* Small screens (mobile) */
+@media (max-width: 600px) {
+  .meetUserVideo {
+    max-width: 100%;
+    border-radius: 8px;
+  }
+
+  .conferenceView {
+    grid-template-columns: 1fr; /* stack remote videos */
+  }
+
+  .chatRoom {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .buttonContainers {
+    gap: 0.5rem;
+  }
+}
+
+/* Tablets */
+@media (min-width: 601px) and (max-width: 1024px) {
+  .conferenceView {
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  }
+}
+
+/* Desktop */
+@media (min-width: 1025px) {
+  .meetVideoContainer {
+    flex-direction: column;
+  }
+
+  .conferenceView {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  }
+}
+
+
 
