@@ -14,10 +14,12 @@ export const register = async (req, res) => {
     return res.status(httpStatus.CONFLICT).json({ message: "User already exits" });
   }
   const hashedPassword = await bcrypt.hash(password, 10);
+
   const newUser = new User({
     name: name,
     username: username,
     password: hashedPassword,
+    isLoggedIn:true
   });
 
   await newUser.save();
