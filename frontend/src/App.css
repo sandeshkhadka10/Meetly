@@ -201,3 +201,84 @@
   height:auto;
   border-radius:20px;
 }
+
+.lobbyentry {
+  padding-inline: 1.2rem;
+  padding-block:1.3rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.lobbyentry h2 {
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+}
+
+/* Username input + Connect button row */
+.inputRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  max-width: 300px;
+  margin-bottom: 10px;
+}
+
+/* Button */
+.connectBtn button {
+  padding: 0.6rem 1.2rem;
+}
+
+/* Error message */
+.lobbyentry p {
+  margin: 0.2rem 0;
+  font-size: 0.9rem;
+}
+
+/* Video */
+.lobbyentry video {
+  width: 100%;
+  max-width: 500px;
+  height: auto;
+  /* margin-top: 10px; */
+  border-radius: 12px;
+  /* box-shadow: 0 4px 10px rgba(0,0,0,0.2); */
+}
+
+
+/* Mobile (stack input + button) */
+@media (max-width: 600px) {
+  .inputRow {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .connectBtn button {
+    width: 100%;
+  }
+
+  .lobbyentry h2 {
+    font-size: 1.3rem;
+  }
+}
+
+/* Tablet */
+@media (min-width: 601px) and (max-width: 1024px) {
+  .lobbyentry h2 {
+    font-size: 1.7rem;
+  }
+
+  .connectBtn button {
+    padding: 0.7rem 1.5rem;
+  }
+}
+
+/* Desktop */
+@media (min-width: 1025px) {
+  .lobbyentry h2 {
+    font-size: 2rem;
+    text-align: left;
+    align-self: flex-start;
+  }
+}
+
+

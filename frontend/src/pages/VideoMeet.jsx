@@ -252,18 +252,19 @@ export default function VideoMeetComponent() {
 
     }
 
-    let addMessage = (data,sender,socketIdSender) => {
-        setMessages((prevMessages)=>[
+    let addMessage = (data, sender, socketIdSender) => {
+        setMessages((prevMessages) => [
             ...prevMessages,
-            {sender:sender,
-                data:data
+            {
+                sender: sender,
+                data: data
             }
         ]);
-        
+
         // to know whether the message sender is new person or not
         // and if it is not a new person then we will not use display it as a new message
-        if(socketIdSender !== socketIdRef.current){
-            setNewMessage((prevMessages)=> prevMessages + 1)
+        if (socketIdSender !== socketIdRef.current) {
+            setNewMessage((prevMessages) => prevMessages + 1)
         }
     }
 
@@ -391,7 +392,7 @@ export default function VideoMeetComponent() {
     let routeTo = useNavigate();
 
     let connect = () => {
-        if(!username){
+        if (!username) {
             setUsernameError("Username should be entered");
             return;
         }
@@ -478,35 +479,41 @@ export default function VideoMeetComponent() {
         setModal(!showModal);
     }
 
-    let sendMessage = () =>{
-        socketRef.current.emit("chat-message",message,username,);
+    let sendMessage = () => {
+        socketRef.current.emit("chat-message", message, username,);
         setMessage("");
     }
 
-    let handleEndCall = () =>{
-        try{
+    let handleEndCall = () => {
+        try {
             let tracks = localVideoRef.current.srcObject.getTracks();
             tracks.forEach(track => track.stop());
-        }catch(e){}
+        } catch (e) { }
         routeTo("/home");
     }
 
     return (
         <div>
             {askForUsername ? (
-                <div>
+                <div className="lobbyentry">
                     <h2>Enter into lobby</h2>
-                    <TextField
-                        id="outlined-basic"
-                        label="Username"
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
-                        variant="outlined"
-                    />
-                    <Button variant="contained" onClick={connect}>
-                        Connect
-                    </Button>
-                    {<p style={{color:"red"}}>{usernameError}</p>}
+                    <div className="inputRow">
+                        <TextField
+                            id="outlined-basic"
+                            label="Username"
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
+                            variant="outlined"
+                        />
+                        <span className="connectBtn">
+                            <Button variant="contained" onClick={connect}>
+                                Connect
+                            </Button>
+                        </span>
+                    </div>
+
+
+                    {<p style={{ color: "red" }}>{usernameError}</p>}
                     <div>
                         <video ref={localVideoRef} autoPlay muted playsInline></video>
                     </div>
@@ -549,14 +556,14 @@ export default function VideoMeetComponent() {
                                 <h1>Chat</h1>
 
                                 <div className={styles.chattingDisplay}>
-                                    {messages.length > 0 ? messages.map((item,index)=>{
-                                        return(
-                                            <div key={index} style={{marginBottom:"20px"}}>
-                                                <p style={{fontWeight:"bold"}}>{item.sender}</p>
+                                    {messages.length > 0 ? messages.map((item, index) => {
+                                        return (
+                                            <div key={index} style={{ marginBottom: "20px" }}>
+                                                <p style={{ fontWeight: "bold" }}>{item.sender}</p>
                                                 <p>{item.data}</p>
                                             </div>
                                         )
-                                    }):<p>No messages yet</p>}
+                                    }) : <p>No messages yet</p>}
                                 </div>
 
                                 <div className={styles.chattingArea}>
