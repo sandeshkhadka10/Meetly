@@ -1,87 +1,61 @@
 .meetVideoContainer{
-    position: relative;
-    height: 100vh;
-    width: 100%;
-    overflow: hidden; /* prevents overflow on smaller screens */
+    position:relative;
+    height:100vh;
 }
-
-/* User's self-video */
 .meetUserVideo{
-    position: absolute;
-    bottom: 10vh;
-    height: 20vh;
-    width: auto;
-    left: 10px;
-    border-radius: 20px;
-    max-width: 30%;  /* ensures it fits in smaller screens */
-    object-fit: cover;
+    position:absolute;
+    bottom:10vh;
+    height:20vh;
+    width:auto;
+    left:10px;
+    border-radius:20px;
 }
 
-/* Button row at bottom */
 .buttonContainers{
     position: absolute;
-    width: 100vw;
-    bottom: 0;
-    text-align: center;
-    padding: 5px 0;
-}
-.buttonContainers svg{
-    font-size: clamp(1.5rem, 2vw, 2.5rem); /* scales icons */
+    width:100vw;
+    bottom:0;
+    text-align:center;
 }
 
-/* Conference grid */
-.conferenceView{
-    display: flex;
-    flex-wrap: wrap; /* allow videos to wrap on smaller widths */
-    padding: 10px;
-    gap: 10px;
-    justify-content: center;
+.buttonContainers svg{
+    font-size:2.5rem;
 }
+
+.conferenceView{
+    display:flex;
+    padding: 10px;
+    gap:10px;
+}
+
 .conferenceView video{
     width: 40vw;
-    height: 20vh;
-    min-width: 200px;
-    max-width: 100%;
-    object-fit: cover;
-    border-radius: 10px;
+    height:20vh;
+    min-width: 30vw;
 }
 
-/* Chat sidebar */
 .chatRoom{
-    position: absolute;
-    height: 90vh;
-    width: 20vw;
-    right: 10px;
-    border-radius: 10px;
-    padding-inline: 20px;
-    background: white;
-    overflow-y: auto; /* makes it scrollable if messages overflow */
-    min-width: 250px; /* keeps chat usable on small screens */
-    max-width: 90vw;  /* prevents overflow on mobiles */
+    position:absolute;
+    height:90vh;
+    width:20vw;
+    right:10px;
+    border-radius:10px;
+    padding-inline:20px;
+    background:white;
 }
 
 .chatContainer{
-    position: relative;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
+    position:relative;
+    height:100%;
 }
 
 .chattingDisplay{
-    flex: 1;
-    overflow-y: auto;
+    
 }
 
-/* Chat input row */
 .chattingArea{
-    position: absolute;
-    bottom: 8px;
-    display: flex;
-    gap: 3px;
-    width: 90%;
-}
-.chattingArea input, 
-.chattingArea button{
-    flex: 1;
-    min-width: 0; /* allow shrinking */
+    position:absolute;
+    bottom:8px;
+    display:flex;
+    gap:3px;
 }
