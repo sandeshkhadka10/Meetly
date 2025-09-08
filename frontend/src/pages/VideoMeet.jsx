@@ -519,7 +519,7 @@ export default function VideoMeetComponent() {
                     </div>
                 </div>
             ) : (
-                <div className={styles.meetVideoContainer} style={{ background: "black" }}>
+                <div className={styles.meetVideoContainer}>
                     <div className={styles.buttonContainers}>
                         <IconButton onClick={handleVideo} style={{ color: "white" }}>
                             {video === true ? <VideocamIcon /> : <VideocamOffIcon />}
