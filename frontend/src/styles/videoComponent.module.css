@@ -36,7 +36,7 @@
 .conferenceView {
   position: relative;
   display: flex;
-  /* flex-wrap: wrap; */
+  flex-wrap: wrap;
   align-items: center;
   justify-content: center;
   gap: 14px;
@@ -44,8 +44,8 @@
   margin-bottom: 12vh;
   height: 100%;
   width: 100%;
-  /* box-sizing: border-box;
-  overflow-y: auto; */
+  box-sizing: border-box;
+  overflow-y: auto;
 }
 
 .conferenceView video {
