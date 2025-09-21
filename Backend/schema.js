@@ -2,7 +2,7 @@ import Joi from "joi";
 
 // for register
 export const usersRegisterSchema = Joi.object({
-    name:Joi.string().required(),
+    email:Joi.string().required(),
     username:Joi.string().required(),
     password:Joi.string().required()
 });

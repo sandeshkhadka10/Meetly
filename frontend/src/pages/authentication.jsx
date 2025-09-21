@@ -19,7 +19,7 @@ import "react-toastify/dist/ReactToastify.css";
 const defaultTheme = createTheme();
 
 export default function Authentication() {
-  const [name,setName] = React.useState();
+  const [email,setEmail] = React.useState();
   const [username,setUsername] = React.useState();
   const [password,setPassword] = React.useState();
   const [loginError,setLoginError] = React.useState();
@@ -50,8 +50,8 @@ export default function Authentication() {
         setPassword("");
       }
       else if(formState === 1){
-        if(!name && !username && !password){
-          setRegisterError("Full name, username and password are required");
+        if(!email && !username && !password){
+          setRegisterError("Email, username and password are required");
           return;
         }
         else if(!username && !password){
@@ -66,8 +66,8 @@ export default function Authentication() {
         }
         setRegisterError("");
 
-        let result = await handleRegister(name,username,password);
-        setName("");
+        let result = await handleRegister(email,username,password);
+        setEmail("");
         setUsername("");
         setPassword("");
       }
@@ -127,13 +127,13 @@ export default function Authentication() {
                 margin="normal"
                 required
                 fullWidth
-                id="Full Name"
-                label="Full Name"
-                name="username"
-                value={name || ""}
+                id="email"
+                label="Email"
+                name="email"
+                value={email || ""}
                 autoFocus
                 size="small"
-                onChange={(e)=>setName(e.target.value)}
+                onChange={(e)=>setEmail(e.target.value)}
               />
               : <></>}
 

@@ -8,15 +8,15 @@ import dotenv from "dotenv";
 dotenv.config();
 
 export const register = async (req, res) => {
-  const { name, username, password } = req.body;
-  const existingUser = await User.findOne({ username });
+  const { email, username, password } = req.body;
+  const existingUser = await User.findOne({ email });
   if (existingUser) {
-    return res.status(httpStatus.CONFLICT).json({ message: "User already exits" });
+    return res.status(httpStatus.CONFLICT).json({ message: "User already exists" });
   }
   const hashedPassword = await bcrypt.hash(password, 10);
 
   const newUser = new User({
-    name: name,
+    email: email,
     username: username,
     password: hashedPassword,
     isLoggedIn:true
