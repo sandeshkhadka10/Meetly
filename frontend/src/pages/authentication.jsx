@@ -12,66 +12,66 @@ import Grid from '@mui/material/Grid';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import {AuthContext} from '../contexts/AuthContenxt';
+import { AuthContext } from '../contexts/AuthContenxt';
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const defaultTheme = createTheme();
 
 export default function Authentication() {
-  const [email,setEmail] = React.useState();
-  const [username,setUsername] = React.useState();
-  const [password,setPassword] = React.useState();
-  const [loginError,setLoginError] = React.useState();
-  const [registerError,setRegisterError] = React.useState();
-  
-  const [formState,setFormState] = React.useState(0);
-  
-  const {handleRegister, handleLogin} = React.useContext(AuthContext);
+  const [email, setEmail] = React.useState();
+  const [username, setUsername] = React.useState();
+  const [password, setPassword] = React.useState();
+  const [loginError, setLoginError] = React.useState();
+  const [registerError, setRegisterError] = React.useState();
 
-  let handleAuth = async() =>{
-    try{
-      if(formState === 0){
-        if(!username && !password){
+  const [formState, setFormState] = React.useState(0);
+
+  const { handleRegister, handleLogin } = React.useContext(AuthContext);
+
+  let handleAuth = async () => {
+    try {
+      if (formState === 0) {
+        if (!username && !password) {
           setLoginError("Username and password are required");
           return;
         }
-        else if(!username){
+        else if (!username) {
           setLoginError("Username is required");
           return;
-        }else if(!password){
+        } else if (!password) {
           setLoginError("Password is required");
           return;
         }
         setLoginError("");
 
-        let result = await handleLogin(username,password);
+        let result = await handleLogin(username, password);
         setUsername("");
         setPassword("");
       }
-      else if(formState === 1){
-        if(!email && !username && !password){
+      else if (formState === 1) {
+        if (!email && !username && !password) {
           setRegisterError("Email, username and password are required");
           return;
         }
-        else if(!username && !password){
+        else if (!username && !password) {
           setRegisterError("Username and password are required");
           return;
-        }else if(!username){
+        } else if (!username) {
           setRegisterError("Username is required");
           return;
-        }else if(!password){
+        } else if (!password) {
           setRegisterError("Password is required");
           return;
         }
         setRegisterError("");
 
-        let result = await handleRegister(email,username,password);
+        let result = await handleRegister(email, username, password);
         setEmail("");
         setUsername("");
         setPassword("");
       }
-    }catch(error){
+    } catch (error) {
       throw error;
     }
   };
@@ -87,11 +87,11 @@ export default function Authentication() {
           backgroundColor: '#f5f5f5',
         }}
       >
-      <CssBaseline />
-        
-        <Paper 
-          elevation={8} 
-          sx={{ 
+        <CssBaseline />
+
+        <Paper
+          elevation={8}
+          sx={{
             p: 4,
             maxWidth: 400,
             width: '100%',
@@ -109,33 +109,33 @@ export default function Authentication() {
             <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
               <LockOutlinedIcon />
             </Avatar>
-            
+
             <div>
-              <Button variant={formState === 0 ? "contained":""} onClick={()=> {setFormState(0)}}>
+              <Button variant={formState === 0 ? "contained" : ""} onClick={() => { setFormState(0) }}>
                 Sign In
               </Button>
-              <Button variant={formState === 1 ? "contained":""} onClick={()=> {setFormState(1)}}>
+              <Button variant={formState === 1 ? "contained" : ""} onClick={() => { setFormState(1) }}>
                 Register
               </Button>
             </div>
-            
+
             <Box component="form" noValidate sx={{ mt: 2, width: '100%' }}>
               {/* <p>{name}</p> */}
               {/* if signup is pressed then display full name */}
-              {formState === 1 ? 
-              <TextField
-                margin="normal"
-                required
-                fullWidth
-                id="email"
-                label="Email"
-                name="email"
-                value={email || ""}
-                autoFocus
-                size="small"
-                onChange={(e)=>setEmail(e.target.value)}
-              />
-              : <></>}
+              {formState === 1 ?
+                <TextField
+                  margin="normal"
+                  required
+                  fullWidth
+                  id="email"
+                  label="Email"
+                  name="email"
+                  value={email || ""}
+                  autoFocus
+                  size="small"
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+                : <></>}
 
               {/* if signin is pressed then not displaying full name */}
               {/* <p>{username}</p> */}
@@ -149,7 +149,7 @@ export default function Authentication() {
                 value={username || ""}
                 autoFocus
                 size="small"
-                onChange={(e)=>setUsername(e.target.value)}
+                onChange={(e) => setUsername(e.target.value)}
               />
               {/* <p>{password}</p> */}
               <TextField
@@ -162,7 +162,7 @@ export default function Authentication() {
                 type="password"
                 id="password"
                 size="small"
-                onChange={(e)=>setPassword(e.target.value)}
+                onChange={(e) => setPassword(e.target.value)}
               />
 
               {/* <FormControlLabel
@@ -171,9 +171,9 @@ export default function Authentication() {
                 sx={{ mt: 1 }}
               /> */}
 
-              {formState === 0 && <p style={{color:"red"}}>{loginError}</p>}
-              {formState === 1 && <p style={{color:"red"}}>{registerError}</p>}
-              
+              {formState === 0 && <p style={{ color: "red" }}>{loginError}</p>}
+              {formState === 1 && <p style={{ color: "red" }}>{registerError}</p>}
+
               <Button
                 type="button"
                 fullWidth
@@ -181,8 +181,16 @@ export default function Authentication() {
                 sx={{ mt: 2, mb: 2 }}
                 onClick={handleAuth}
               >
-                {formState === 0 ? "Sign In": "Register" }
+                {formState === 0 ? "Sign In" : "Register"}
               </Button>
+
+              {formState === 0 ?
+                <div>
+                  <span style={{ display: "flex", justifyContent: "center", alignItems: "center", fontSize: "0.9rem" }}>
+                    Forgot your password? {" "}
+                    <Link to="">Reset Here</Link>
+                  </span>
+                </div> : <></>}
 
               {/* <Grid container spacing={2}>
                 <Grid item xs={12} sm={6}>
@@ -200,7 +208,7 @@ export default function Authentication() {
             </Box>
           </Box>
         </Paper>
-        <ToastContainer/>
+        <ToastContainer />
       </Box>
     </ThemeProvider>
   );
