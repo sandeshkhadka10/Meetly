@@ -18,8 +18,16 @@ const userSchema = new Schema(
         isLoggedIn:{
             type:Boolean,
             default:false
+        },
+        resetCode:{
+            type:String,
+            default:null
+        },
+        resetCodeExpiry:{
+            type:Date,
+            default:null
         }
     }
-)
+);
 const User = mongoose.model("User",userSchema);
 export {User};
