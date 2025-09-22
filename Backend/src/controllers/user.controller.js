@@ -84,6 +84,34 @@ export const logout = async(req, res) => {
   res.status(httpStatus.CREATED).json({ message: "Logged out successfully" });
 };
 
+export const forgetPassword = async(req,res)=>{
+  const {email} = req.body;
+  const existingUser = await User.findOne({email});
+  if(!existingUser){
+    return res.status(httpStatus.NOT_FOUND).json({message:"User doesn't exists"});
+  }
+  const resetCode = Math.floor(10000 + Math.random()*90000).toString();
+  const expires = new Date(Date.now()+1*60*1000);
+  existingUser.resetCode = resetCode;
+  existingUser.resetCodeExpiry = expires;
+  await existingUser.save();
+
+  // Email sending work
+  const mailOptions = {
+    from:process.env.EMAIL_USER,
+    to:email,
+    subject:"Password Reset Code",
+    text:`Your password reset code is ${resetCode}. It will expire in 1 minute.`
+  };
+  try{
+    await transporter.sendMail(mailOptions);
+    res.status(httpStatus.OK).json({message:"Reset code sent to your email"});
+  }catch(error){
+    console.error("Error while sending email:",error);
+    res.status(httpStatus.INTERNAL_SERVER_ERROR).json({message:"Failed to send reset code"});
+  }
+};
+
 export const addToHistory = async (req, res) => {
   const {meeting_code } = req.body;
 
