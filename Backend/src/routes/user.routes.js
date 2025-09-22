@@ -22,6 +22,10 @@ router.route("/login").post(validateLogin, wrapAsync(login));
 
 router.route("/logout").get(userVerification,logout);
 
+router.route("/forgetPassword").post(validateForgetPassword,wrapAsync(forgetPassword));
+
+router.route("/resetPassword").post(validateResetPassword,wrapAsync(resetPassword));
+
 router
   .route("/add_to_activity")
   .post(userVerification, wrapAsync(addToHistory));
