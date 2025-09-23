@@ -3,6 +3,7 @@ import { User } from "../models/user.models.js";
 import bcrypt from "bcrypt";
 import { Meeting } from "../models/meeting.models.js";
 import { createSecretToken } from "../util/SecretToken.js";
+import nodemailer from "nodemailer";
 import dotenv from "dotenv";
 
 dotenv.config();

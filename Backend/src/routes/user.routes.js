@@ -3,13 +3,16 @@ import {
   register,
   login,
   logout,
+  forgetPassword,
+  resetPassword,
   addToHistory,
   getUserHistory,
 } from "../controllers/user.controller.js";
 import {
   validateRegister,
   validateLogin,
-  validateMeeting,
+  validateForgetPassword,
+  validateResetPassword
 } from "../middlewares/validation.middleware.js";
 import wrapAsync from "../util/wrapAsync.js";
 import { userVerification } from "../middlewares/auth.middleware.js";
