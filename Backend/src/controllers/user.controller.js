@@ -112,6 +112,23 @@ export const forgetPassword = async(req,res)=>{
   }
 };
 
+export const resetPassword = async(req,res)=>{
+  const {email,resetCode,newPassword}  =req.body;
+  const existingUser = await User.findOne({email});
+  if(!existingUser || String(existingUser.resetCode).trim() !== String(resetCode).trim()){
+    return res.status(httpStatus.BAD_REQUEST).json({message:"Invalid code or email"});
+  }
+  if(Date.now() > new Date(existingUser.resetCodeExpiry).getTime()){
+    return res.status(httpStatus.BAD_REQUEST).json({message:"Reset Code expired"});
+  }
+  const hashedPassword = await bcrypt.hash(newPassword,10);
+  existingUser.password = hashedPassword;
+  existingUser.resetCode = undefined;
+  existingUser.resetCodeExpiry = undefined;
+  await existingUser.save();
+  return res.status(httpStatus.OK).json({message:"Password reset successfully"});
+}
+
 export const addToHistory = async (req, res) => {
   const {meeting_code } = req.body;
 
