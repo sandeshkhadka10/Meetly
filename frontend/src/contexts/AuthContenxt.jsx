@@ -71,6 +71,40 @@ export const AuthProvider = ({ children }) => {
 
     }
 
+    const handleForgetPassword = async(email) => {
+        try{
+            let request = await client.post("/forgetPassword",{
+                email:email
+            });
+            if(request.status === httpStatus.OK){
+                toast.success(request.data.message);
+                setTimeout(()=>{
+                    router("/resetPassword");
+                },2500);
+            }
+        }catch(error){
+            toast.error(error.response?.data?.message);
+        }
+    }
+
+    const handleResetPassword = async(email,resetCode,newPassword) => {
+        try{
+            let request = await client.post("/resetPassword",{
+                email:email,
+                resetCode:resetCode,
+                newPassword:newPassword
+            });
+            if(request.status === httpStatus.OK){
+                toast.success(request.data.message);
+                setTimeout(() => {
+                  router("/login");  
+                },2500);
+            }
+        }catch(error){
+            toast.error(error.response?.data?.message);
+        }
+    }
+
     const addToUserHistory = async (meetingCode) => {
         try {
             let request = await client.post("/add_to_activity", {
@@ -92,7 +126,7 @@ export const AuthProvider = ({ children }) => {
     }
 
     const data = {
-        userData, setUserData, handleRegister, handleLogin, handleLogout, addToUserHistory, getHistoryOfUser
+        userData, setUserData, handleRegister, handleLogin, handleLogout, handleForgetPassword, handleResetPassword, addToUserHistory, getHistoryOfUser
     }
     return (
         <AuthContext.Provider value={data}>
