@@ -9,6 +9,8 @@ import VideoMeetComponent from './pages/VideoMeet';
 import HomeComponent from './pages/home';
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import ForgetPassword from './pages/forgetPassword';
+import ResetPassword from './pages/resetPassword';
 
 function App() {
   return (
