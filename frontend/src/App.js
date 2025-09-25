@@ -24,6 +24,8 @@ function App() {
         <Route path='/home' element={<HomeComponent/>}></Route>
         <Route path='/history' element={<History/>}></Route>
         <Route path='/:url' element={<VideoMeetComponent/>}></Route>
+        <Route path='/forgetPassword' element={<ForgetPassword/>}></Route>
+        <Route path='/resetPassword' element={<ResetPassword/>}></Route>
       </Routes>
       </AuthProvider>
     </Router>
