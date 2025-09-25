@@ -38,7 +38,7 @@ const start = async () => {
   try {
     app.set("mongo_user");
     const connectionDb = await mongoose.connect(
-      "mongodb+srv://attkhadka551:sTnWP32YKkBNoFxW@cluster0.bmhjx04.mongodb.net/"
+      ""
     );
     console.log(`Mongo Connected DB Host:${connectionDb.connection.host}`);
     server.listen(app.get("port"), () => {
