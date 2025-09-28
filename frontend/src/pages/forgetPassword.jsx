@@ -21,6 +21,7 @@ export default function ForgetPassword(){
         try{
             if(!email){
                 setEmailError("Email is required");
+                return;
             }
             setEmailError("");
 
