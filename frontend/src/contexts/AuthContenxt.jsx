@@ -97,7 +97,7 @@ export const AuthProvider = ({ children }) => {
             if(request.status === httpStatus.OK){
                 toast.success(request.data.message);
                 setTimeout(() => {
-                  router("/login");  
+                  router("/auth");  
                 },2500);
             }
         }catch(error){
