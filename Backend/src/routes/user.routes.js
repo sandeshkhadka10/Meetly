@@ -23,6 +23,8 @@ router.route("/register").post(validateRegister, wrapAsync(register));
 
 router.route("/login").post(validateLogin, wrapAsync(login));
 
+router.route("/logout").get(userVerification,logout);
+
 router.route("/forgetPassword").post(validateForgetPassword,wrapAsync(forgetPassword));
 
 router.route("/resetPassword").post(validateResetPassword,wrapAsync(resetPassword));
