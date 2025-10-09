@@ -1,61 +1,168 @@
-.landingPageContainer{
+.landingPageContainer {
   width: 100vw;
   height: 100vh;
   background: url("/public/background.png");
   background-repeat: no-repeat;
   background-size: cover;
-  color:white;
+  color: white;
+  overflow-x: hidden;
 }
 
-.landingPageContainer nav{
+/* ---------------- NAVBAR ---------------- */
+.landingPageContainer nav {
   padding-inline: 1.2rem;
   padding-block: 1.3rem;
   display: flex;
-  justify-content:space-between;
-  align-items:center;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
 }
 
-.landingPageContainer nav h2{
+.landingPageContainer nav h2 {
   font-size: 1.8rem;
   font-weight: 500;
 }
 
-.landingPageContainer nav .navlist{
-  display:flex;
-  gap:1.6rem;
-  cursor:pointer;
+.landingPageContainer nav .navlist {
+  display: flex;
+  gap: 1.6rem;
+  cursor: pointer;
 }
 
-.landingMainContainer{
-  display:flex;
-  justify-content:space-between;
-  padding-inline:3rem;
-  height:80vh;
-  align-items:center;
+/* ---------------- HAMBURGER ---------------- */
+.hamburger {
+  /* display: none; */
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+  /* z-index: 11; */
 }
 
-.landingMainContainer > div:nth-child(1){
-  font-size:1.5rem;
+.hamburger span {
+  width: 25px;
+  height: 3px;
+  background: white;
+  border-radius: 2px;
+  /* transition: all 0.3s ease; */
 }
 
-.landingMainContainer > div:nth-child(1) div[role="button"]{
-  background:#D97500;
-  width:fit-content;
-  padding:1rem;
-  border-radius:20px;
-  margin-top:1.5rem;
+/* ---------------- MAIN CONTENT ---------------- */
+.landingMainContainer {
+  display: flex;
+  justify-content: space-between;
+  padding-inline: 3rem;
+  height: 80vh;
+  align-items: center;
+  gap: 2rem;
 }
-.landingMainContainer > div:nth-child(1) div[role="button"] a{
-  text-decoration:none;
+
+.landingMainContainer > div:nth-child(1) {
+  font-size: 1.5rem;
+  /* max-width: 500px; */
+}
+
+.landingMainContainer > div:nth-child(1) div[role="button"] {
+  background: #D97500;
+  width: fit-content;
+  padding: 1rem;
+  border-radius: 20px;
+  margin-top: 1.5rem;
+  transition: background 0.3s;
+}
+.landingMainContainer > div:nth-child(1) div[role="button"]:hover {
+  background: #b55c00;
+}
+
+.landingMainContainer > div:nth-child(1) div[role="button"] a {
+  text-decoration: none;
   color: white;
-  font-size:1.5rem;
+  font-size: 1.2rem;
 }
 
-.landingMainContainer > div:nth-child(2) img{
-  height:65vh;
-  width:auto;
+.landingMainContainer > div:nth-child(2) img {
+  height: 65vh;
+  width: auto;
+  max-width: 100%;
 }
 
+/* ---------------- RESPONSIVE ---------------- */
+@media (max-width: 992px) {
+  .landingMainContainer {
+    flex-direction: column;
+    text-align: start;
+    padding-inline: 1.5rem;
+    height: auto;
+    margin-top:5rem;
+  }
+
+  .landingMainContainer > div:nth-child(1) {
+    font-size: 1.2rem;
+  }
+
+  .landingMainContainer > div:nth-child(2) img {
+    height: auto;
+    max-width: 99%;
+    margin-top:3rem;
+  }
+}
+
+@media (max-width: 768px) {
+  /* Hide navlist initially */
+  .landingPageContainer nav .navlist {
+    display: none;
+    flex-direction: column;
+    background: rgba(0, 0, 0, 0.95);
+    position: absolute;
+    top: 70px;
+    right: 20px;
+    padding: 1rem 2rem;
+    /* border-radius: 12px; */
+    text-align: center;
+    /* z-index: 10; */
+  }
+
+  /* Show navlist when menuOpen = true */
+  .landingPageContainer nav .navlist.open {
+    display: flex;
+    gap: 1.2rem;
+  }
+
+  /* Show hamburger */
+  .hamburger {
+    display: flex;
+  }
+
+  /* Main content adjustments */
+  .landingMainContainer {
+    flex-direction: column;
+    padding-inline: 1rem;
+    gap: 2rem;
+  }
+
+  .landingMainContainer > div:nth-child(1) {
+    font-size: 1rem;
+  }
+
+  .landingMainContainer > div:nth-child(1) h1 {
+    font-size: 1.6rem;
+  }
+
+  .landingMainContainer > div:nth-child(1) div[role="button"] {
+    padding: 0.8rem 1rem;
+    border-radius: 15px;
+  }
+
+  .landingMainContainer > div:nth-child(1) div[role="button"] a {
+    font-size: 1rem;
+  }
+
+  .landingMainContainer > div:nth-child(2) img {
+    width: 100%;
+    height: auto;
+  }
+}
+
+/* this is used in home.jsx */
 .navBar{
   display:flex;
   align-items:center;
@@ -93,4 +200,83 @@
   width:45vw;
   height:auto;
   border-radius:20px;
+}
+
+.lobbyentry {
+  padding-inline: 1.2rem;
+  padding-block:1.3rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.lobbyentry h2 {
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+}
+
+/* Username input + Connect button row */
+.inputRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  max-width: 300px;
+  margin-bottom: 10px;
+}
+
+/* Button */
+.connectBtn button {
+  padding: 0.6rem 1.2rem;
+}
+
+/* Error message */
+.lobbyentry p {
+  margin: 0.2rem 0;
+  font-size: 0.9rem;
+}
+
+/* Video */
+.lobbyentry video {
+  width: 100%;
+  max-width: 500px;
+  height: auto;
+  /* margin-top: 10px; */
+  border-radius: 12px;
+  /* box-shadow: 0 4px 10px rgba(0,0,0,0.2); */
+}
+
+
+/* Mobile (stack input + button) */
+@media (max-width: 600px) {
+  .inputRow {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .connectBtn button {
+    width: 100%;
+  }
+
+  .lobbyentry h2 {
+    font-size: 1.3rem;
+  }
+}
+
+/* Tablet */
+@media (min-width: 601px) and (max-width: 1024px) {
+  .lobbyentry h2 {
+    font-size: 1.7rem;
+  }
+
+  .connectBtn button {
+    padding: 0.7rem 1.5rem;
+  }
+}
+
+/* Desktop */
+@media (min-width: 1025px) {
+  .lobbyentry h2 {
+    font-size: 2rem;
+    text-align: left;
+    align-self: flex-start;
+  }
 }

@@ -7,14 +7,21 @@ import IconButton from "@mui/material/IconButton";
 import TextField from "@mui/material/TextField";
 import RestoreIcon from '@mui/icons-material/Restore';
 import { AuthContext } from "../contexts/AuthContenxt";
+import { toast,ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function HomeComponent(){
     let navigate = useNavigate();
 
     const [meetingCode,setMeetingCode] = useState("");
-    const {addToUserHistory} = useContext(AuthContext);
+    const {addToUserHistory,handleLogout} = useContext(AuthContext);
+    const [meetingCodeError, setMeetingCodeError] = useState("");
 
     let handleJoinVideoCall = async () =>{
+        if(!meetingCode){
+            setMeetingCodeError("Create or Enter the meeting id!");
+            return;
+        }
         await addToUserHistory(meetingCode);
         navigate(`/${meetingCode}`);
     }
@@ -32,10 +39,9 @@ function HomeComponent(){
                         <RestoreIcon/>
                         <p style={{fontSize:"1rem"}}>History</p>
                     </IconButton>
-                    <Button onClick={()=>{
-                        localStorage.removeItem("token")
-                        navigate("/auth")
-                    }}>
+                    <Button onClick={
+                        handleLogout
+                    }>
                         <p>Logout</p>
                     </Button>
                 </div>
@@ -45,15 +51,17 @@ function HomeComponent(){
                     <div>
                         <h2>Providing Quality Video Call Just Like Quality Education</h2>
                         <div style={{display:"flex",gap:"10px"}}>
-                            <TextField onChange={e => setMeetingCode(e.target.value)} id="outlined-basic" label="Outlined" variant="outlined" />
+                            <TextField onChange={e => setMeetingCode(e.target.value)} id="outlined-basic" label="Meeting_Id" variant="outlined"/>
                             <Button onClick={handleJoinVideoCall} variant="contained">Join</Button>
                         </div>
+                        {<p style={{color:"red"}}>{meetingCodeError}</p>}
                     </div>
                 </div>
                 <div className="rightPanel">
                     <img src="/singleMobile.png" alt=""/>
                 </div>
             </div>
+            <ToastContainer/>
         </div>
     )
 }

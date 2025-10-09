@@ -2,12 +2,15 @@ import React, { createContext, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import httpStatus from "http-status";
+import { toast} from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export const AuthContext = createContext({});
 
 const client = axios.create({
-    baseURL: "http://localhost:8000/api/v1/users"
-})
+    baseURL: "http://localhost:8000/api/v1/users",
+    withCredentials:true
+});
 
 export const AuthProvider = ({ children }) => {
     const authContext = useContext(AuthContext);
@@ -16,18 +19,21 @@ export const AuthProvider = ({ children }) => {
 
     const router = useNavigate();
 
-    const handleRegister = async (name, username, password) => {
+    const handleRegister = async (email, username, password) => {
         try {
             let request = await client.post("/register", {
-                name: name,
+                email: email,
                 username: username,
                 password: password
             });
             if (request.status === httpStatus.CREATED) {
-                return request.data.message;
+                toast.success(request.data.message);
+                setTimeout(()=>{
+                    router("/home");
+                },2500);
             }
         } catch (error) {
-            throw error;
+            toast.error(error.response?.data?.message);
         }
     }
 
@@ -37,44 +43,90 @@ export const AuthProvider = ({ children }) => {
                 username: username,
                 password: password
             });
-            if (request.status === httpStatus.OK) {
-                localStorage.setItem("token", request.data.token);
-                router("/home");
+            if (request.status === httpStatus.CREATED) {
+                setUserData({username});
+                toast.success(request.data.message);
+                setTimeout(() => {
+                    router("/home");
+                },2500);
             }
-
         } catch (error) {
-            throw error;
+            toast.error(error.response?.data?.message);
+        }
+    }
+
+    const handleLogout = async()=>{
+        try{
+            let request = await client.get("/logout");
+            if(request.status === httpStatus.CREATED){
+                setUserData(null);
+                toast.success(request.data.message);
+                setTimeout(() => {
+                    router("/");
+                },2500); 
+            }
+        }catch(error){
+            toast.error(error.response?.data?.message);
+        }
+
+    }
+
+    const handleForgetPassword = async(email) => {
+        try{
+            let request = await client.post("/forgetPassword",{
+                email:email
+            });
+            if(request.status === httpStatus.OK){
+                toast.success(request.data.message);
+                setTimeout(()=>{
+                    router("/resetPassword");
+                },2500);
+            }
+        }catch(error){
+            toast.error(error.response?.data?.message);
+        }
+    }
+
+    const handleResetPassword = async(email,resetCode,newPassword) => {
+        try{
+            let request = await client.post("/resetPassword",{
+                email:email,
+                resetCode:resetCode,
+                newPassword:newPassword
+            });
+            if(request.status === httpStatus.OK){
+                toast.success(request.data.message);
+                setTimeout(() => {
+                  router("/auth");  
+                },2500);
+            }
+        }catch(error){
+            toast.error(error.response?.data?.message);
         }
     }
 
     const addToUserHistory = async (meetingCode) => {
         try {
             let request = await client.post("/add_to_activity", {
-                token: localStorage.getItem("token"),
                 meeting_code: meetingCode
-
             });
-            return request;
+            return request.data;
         } catch (error) {
-            throw error;
+            throw error.response?.data?.message;
         }
     }
 
     const getHistoryOfUser = async () => {
         try {
-            let request = await client.get("/get_all_activity", {
-                params: {
-                    token: localStorage.getItem("token")
-                }
-            });
+            let request = await client.get("/get_all_activity");
             return request.data;
         } catch (error) {
-            throw error;
+            throw error.response?.data?.message;
         }
     }
 
     const data = {
-        userData, setUserData, handleRegister, handleLogin, addToUserHistory, getHistoryOfUser
+        userData, setUserData, handleRegister, handleLogin, handleLogout, handleForgetPassword, handleResetPassword, addToUserHistory, getHistoryOfUser
     }
     return (
         <AuthContext.Provider value={data}>

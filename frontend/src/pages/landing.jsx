@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import "../App.css";
 import { useNavigate, Link } from "react-router-dom";
 
 export default function LandingPage() {
   const navigate = useNavigate();
+  const [menuOpen, setMenuOpen] = useState(false);
 
   return (
     <div className="landingPageContainer">
@@ -12,20 +13,24 @@ export default function LandingPage() {
         <div className="navHeader">
           <h2>Meetly</h2>
         </div>
-        <div className="navlist">
-          <p onClick={() => {
-            navigate("/joiningasguest");
-          }}>Join as Guest</p>
-          <p onClick={() => {
-            navigate("/auth");
-          }}>Register</p>
+
+        {/* Hamburger icon */}
+        <div className="hamburger" onClick={() => setMenuOpen(!menuOpen)}>
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+
+        {/* Navigation List */}
+        <div className={`navlist ${menuOpen ? "open" : ""}`}>
+          <p onClick={() => navigate("/joiningasguest")}>Join as Guest</p>
+          <p onClick={() => navigate("/auth")}>Register</p>
           <div role="button">
-            <p onClick={() => {
-              navigate("/auth");
-            }}>Login</p>
+            <p onClick={() => navigate("/auth")}>Login</p>
           </div>
         </div>
       </nav>
+
       {/* Main Content */}
       <div className="landingMainContainer">
         <div>

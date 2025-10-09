@@ -2,22 +2,32 @@ import mongoose,{Schema} from "mongoose";
 
 const userSchema = new Schema(
     {
-        name:{
+        email:{
             type:String,
-            required:true
+            required:true,
+            unique:true
         },
         username:{
             type:String,
-            required:true
+            required:true,
         },
         password:{
             type:String,
             required:true
         },
-        token:{
-            type:String
+        isLoggedIn:{
+            type:Boolean,
+            default:false
+        },
+        resetCode:{
+            type:String,
+            default:null
+        },
+        resetCodeExpiry:{
+            type:Date,
+            default:null
         }
     }
-)
+);
 const User = mongoose.model("User",userSchema);
 export {User};

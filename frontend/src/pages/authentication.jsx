@@ -3,60 +3,74 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-import Link from '@mui/material/Link';
 import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
-import Grid from '@mui/material/Grid';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import {AuthContext} from '../contexts/AuthContenxt';
-import Snackbar from '@mui/material/Snackbar';
-
+import { AuthContext } from '../contexts/AuthContenxt';
+import { ToastContainer} from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { Link } from "react-router-dom";
 
 const defaultTheme = createTheme();
 
 export default function Authentication() {
-  const [name,setName] = React.useState();
-  const [username,setUsername] = React.useState();
-  const [password,setPassword] = React.useState();
-  const [error,setError] = React.useState();
-  const [message,setMessage] = React.useState();
+  const [email, setEmail] = React.useState();
+  const [username, setUsername] = React.useState();
+  const [password, setPassword] = React.useState();
+  const [loginError, setLoginError] = React.useState();
+  const [registerError, setRegisterError] = React.useState();
 
-  const [formState,setFormState] = React.useState(0);
-  
-  // this is for snackbar
-  const [open,setOpen] = React.useState(false);
+  const [formState, setFormState] = React.useState(0);
 
-  const {handleRegister, handleLogin} = React.useContext(AuthContext);
+  const { handleRegister, handleLogin } = React.useContext(AuthContext);
 
-  let handleAuth = async() =>{
-    try{
-      if(formState === 0){
-        let result = await handleLogin(username,password);
-        setMessage(result);
-        setOpen(true);
+  let handleAuth = async () => {
+    try {
+      if (formState === 0) {
+        if (!username && !password) {
+          setLoginError("Username and password are required");
+          return;
+        }
+        else if (!username) {
+          setLoginError("Username is required");
+          return;
+        } else if (!password) {
+          setLoginError("Password is required");
+          return;
+        }
+        setLoginError("");
+
+        let result = await handleLogin(username, password);
         setUsername("");
         setPassword("");
-        setError("");
       }
-      if(formState === 1){
-        let result = await handleRegister(name,username,password);
-        setMessage(result);
-        setOpen(true);
-        setName("");
+      else if (formState === 1) {
+        if (!email && !username && !password) {
+          setRegisterError("Email, username and password are required");
+          return;
+        }
+        else if (!username && !password) {
+          setRegisterError("Username and password are required");
+          return;
+        } else if (!username) {
+          setRegisterError("Username is required");
+          return;
+        } else if (!password) {
+          setRegisterError("Password is required");
+          return;
+        }
+        setRegisterError("");
+
+        let result = await handleRegister(email, username, password);
+        setEmail("");
         setUsername("");
         setPassword("");
-        setError("");
-        setFormState(0);
       }
-    }catch(error){
-      let message = (error.response.data.message);
-      setError(message);
+    } catch (error) {
+      throw error;
     }
-  }
+  };
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -69,11 +83,11 @@ export default function Authentication() {
           backgroundColor: '#f5f5f5',
         }}
       >
-      <CssBaseline />
-        
-        <Paper 
-          elevation={8} 
-          sx={{ 
+        <CssBaseline />
+
+        <Paper
+          elevation={8}
+          sx={{
             p: 4,
             maxWidth: 400,
             width: '100%',
@@ -91,33 +105,33 @@ export default function Authentication() {
             <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
               <LockOutlinedIcon />
             </Avatar>
-            
+
             <div>
-              <Button variant={formState === 0 ? "contained":""} onClick={()=> {setFormState(0)}}>
+              <Button variant={formState === 0 ? "contained" : ""} onClick={() => { setFormState(0) }}>
                 Sign In
               </Button>
-              <Button variant={formState === 1 ? "contained":""} onClick={()=> {setFormState(1)}}>
+              <Button variant={formState === 1 ? "contained" : ""} onClick={() => { setFormState(1) }}>
                 Register
               </Button>
             </div>
-            
+
             <Box component="form" noValidate sx={{ mt: 2, width: '100%' }}>
               {/* <p>{name}</p> */}
               {/* if signup is pressed then display full name */}
-              {formState === 1 ? 
-              <TextField
-                margin="normal"
-                required
-                fullWidth
-                id="Full Name"
-                label="Full Name"
-                name="username"
-                value={name || ""}
-                autoFocus
-                size="small"
-                onChange={(e)=>setName(e.target.value)}
-              />
-              : <></>}
+              {formState === 1 ?
+                <TextField
+                  margin="normal"
+                  required
+                  fullWidth
+                  id="email"
+                  label="Email"
+                  name="email"
+                  value={email || ""}
+                  autoFocus
+                  size="small"
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+                : <></>}
 
               {/* if signin is pressed then not displaying full name */}
               {/* <p>{username}</p> */}
@@ -131,7 +145,7 @@ export default function Authentication() {
                 value={username || ""}
                 autoFocus
                 size="small"
-                onChange={(e)=>setUsername(e.target.value)}
+                onChange={(e) => setUsername(e.target.value)}
               />
               {/* <p>{password}</p> */}
               <TextField
@@ -144,7 +158,7 @@ export default function Authentication() {
                 type="password"
                 id="password"
                 size="small"
-                onChange={(e)=>setPassword(e.target.value)}
+                onChange={(e) => setPassword(e.target.value)}
               />
 
               {/* <FormControlLabel
@@ -152,9 +166,9 @@ export default function Authentication() {
                 label="Remember me"
                 sx={{ mt: 1 }}
               /> */}
-              
-              {/* it is for displaying error message at the signup or signin */}
-              <p style={{color:"red"}}>{error}</p>
+
+              {formState === 0 && <p style={{ color: "red" }}>{loginError}</p>}
+              {formState === 1 && <p style={{ color: "red" }}>{registerError}</p>}
 
               <Button
                 type="button"
@@ -163,8 +177,16 @@ export default function Authentication() {
                 sx={{ mt: 2, mb: 2 }}
                 onClick={handleAuth}
               >
-                {formState === 0 ? "Sign In": "Register" }
+                {formState === 0 ? "Sign In" : "Register"}
               </Button>
+
+              {formState === 0 ?
+                <div>
+                  <span style={{ display: "flex", justifyContent: "center", alignItems: "center", fontSize: "0.9rem" }}>
+                    Forgot your password? {" "}
+                    <Link to="/forgetPassword"> Reset Here</Link>
+                  </span>
+                </div> : <></>}
 
               {/* <Grid container spacing={2}>
                 <Grid item xs={12} sm={6}>
@@ -182,15 +204,8 @@ export default function Authentication() {
             </Box>
           </Box>
         </Paper>
+        <ToastContainer />
       </Box>
-
-      <Snackbar
-        open={open}
-        autoHideDuration={4000}
-        onClose={() => setOpen(false)}
-        message={message}
-      />
-
     </ThemeProvider>
   );
 }

@@ -7,10 +7,15 @@ import History from './pages/history';
 import { AuthProvider } from './contexts/AuthContenxt';
 import VideoMeetComponent from './pages/VideoMeet';
 import HomeComponent from './pages/home';
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import ForgetPassword from './pages/forgetPassword';
+import ResetPassword from './pages/resetPassword';
 
 function App() {
   return (
     <>
+    <ToastContainer position="top-right" autoClose={2500} />
     <Router>
       <AuthProvider>
       <Routes>
@@ -19,6 +24,8 @@ function App() {
         <Route path='/home' element={<HomeComponent/>}></Route>
         <Route path='/history' element={<History/>}></Route>
         <Route path='/:url' element={<VideoMeetComponent/>}></Route>
+        <Route path='/forgetPassword' element={<ForgetPassword/>}></Route>
+        <Route path='/resetPassword' element={<ResetPassword/>}></Route>
       </Routes>
       </AuthProvider>
     </Router>
