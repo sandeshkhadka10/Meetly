@@ -18,8 +18,6 @@ const server = createServer(app);
 // const io = new Server(server);
 const io = connectToSocket(server);
 
-app.set("port", process.env.PORT || 8000);
-
 const mongo_url = process.env.MONGO_URL;
 async function main() {
   await mongoose.connect(mongo_url);
@@ -73,8 +71,8 @@ app.use((err, req, res, next) => {
   res.status(statusCode).json({ error: message });
 });
 
-app.listen(PORT, () => {
-  console.log(`Server running on Port ${PORT}`);
+app.listen(8000, () => {
+  console.log(`Server running on Port 8000`);
 });
 
 
