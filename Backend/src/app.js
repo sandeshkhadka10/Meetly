@@ -7,7 +7,8 @@ import {connectToSocket} from "./controllers/socketManager.js";
 import userRoutes from "./routes/user.routes.js";
 import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
-
+import session from "express-session";
+import MongoStore from "connect-mongo";
 dotenv.config();
 
 const app = express();
@@ -17,17 +18,49 @@ const server = createServer(app);
 // const io = new Server(server);
 const io = connectToSocket(server);
 
-const mongo_url = process.env.MONGO_URL;
-
 app.set("port", process.env.PORT || 8000);
+
+const mongo_url = process.env.MONGO_URL;
+async function main() {
+  await mongoose.connect(mongo_url);
+  console.log("Connected to MongoDB successfully");
+}
+
+main().catch((err) => console.log(err));
 
 app.use(cors({
   origin:"http://localhost:3000",
   credentials:true
 }));
+
 app.use(express.json({limit:"40kb"}));
 app.use(express.urlencoded({limit:"40kb",extended:true}));
 app.use(cookieParser());
+
+const store = MongoStore.create({
+  mongoUrl: mongo_url,
+  crypto: {
+    secret: process.env.SESSION_SECRET,
+  },
+  touchAfter: 24 * 3600,
+});
+
+store.on("error", (err) => {
+  console.log("Error in mongo session store: ", err);
+});
+
+const sessionOptions = {
+  store,
+  secret: process.env.SESSION_SECRET,
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    expires: Date.now() + 7 * 24 * 60 * 60 * 1000,
+    maxAge: 7 * 24 * 60 * 60 * 1000,
+    httpOnly: true,
+  },
+};
+app.use(session(sessionOptions));
 
 app.use("/api/v1/users",userRoutes);
 
@@ -40,19 +73,9 @@ app.use((err, req, res, next) => {
   res.status(statusCode).json({ error: message });
 });
 
+app.listen(PORT, () => {
+  console.log(`Server running on Port ${PORT}`);
+});
 
-const start = async () => {
-  try {
-    app.set("mongo_user");
-    const connectionDb = await mongoose.connect(
-      mongo_url
-    );
-    console.log(`Mongo Connected DB Host:${connectionDb.connection.host}`);
-    server.listen(app.get("port"), () => {
-      console.log("Listening on port 8000");
-    });
-  } catch (err) {
-    console.log("Error connecting to MongoDB or starting server: ", err);
-  }
-};
-start();
+
+
