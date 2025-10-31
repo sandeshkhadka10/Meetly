@@ -8,16 +8,16 @@ dotenv.config();
 export const userVerification = async (req, res, next) => {
   try {
     const token = req.cookies.token;
-    if (!token) {
-      return res.status(401).json({ message: "No token provided" });
-    }
+    if (!req.session.user || req.session.user.token !== token) {
+    return res.status(httpStatus.UNAUTHORIZED).json({ status: false, message: "Session expired or invalid" });
+  }
 
     const decoded = jwt.verify(token, process.env.TOKEN_KEY);
     // console.log("Decoded JWT:", decoded);
 
     const user = await User.findById(decoded.id);
     if (!user) {
-      return res.status(401).json({ message: "User not found" });
+      return res.status(httpStatus.UNAUTHORIZED).json({ message: "User not found" });
     }
 
     req.user = user;
