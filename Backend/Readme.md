@@ -16,22 +16,25 @@ Making video calling platform using WebRTC and Socket.io
 
 ## About
 
-Meetly is a simple and efficient video calling platform built with [WebRTC](https://webrtc.org/) for peer-to-peer media transmission and [Socket.io](https://socket.io/) for signaling and real-time communication. It allows users to create or join rooms for seamless video calls.
+Meetly is a simple and efficient video calling and messaging platform built with [WebRTC](https://webrtc.org/) for peer-to-peer media transmission and [Socket.io](https://socket.io/) for signaling and real-time communication. It allows users to create or join rooms for seamless video calls and messaging.
 
 ## Features
 
-- Real-time video calling
+- Real-time video calling and messaging
 - Room management for group calls
 - Peer-to-peer media streaming
 - Simple and intuitive UI
 
 ## Tech Stack
 
+- **HTML** (Core templates)
+- **CSS** (Styling)
 - **JavaScript** (Frontend and Backend)
+- **Node.js**
+- **Express.js**
+- **MongoDB**
 - **WebRTC**
 - **Socket.io**
-- **CSS** (Styling)
-- **HTML** (Core templates)
 
 ## Installation
 
@@ -57,7 +60,13 @@ Follow the steps below to install and run Meetly on your local machine.
    npm install
    ```
 
-3. **Start the server**
+3. **Create the credentials key for given .env.sample**
+
+   ```bash
+   npm start
+   ```
+
+3. **Start the server i.e backend and frontend**
 
    ```bash
    npm start
@@ -71,22 +80,10 @@ Follow the steps below to install and run Meetly on your local machine.
 
 1. Open the application in your browser.
 2. Create a new room or join an existing one.
-3. Share the room link with friends to start a video call.
-
-## Contributing
-
-Contributions are welcome! Please fork the repository and submit a pull request.
-
-1. Fork the repo
-2. Create your feature branch: `git checkout -b feature/your-feature`
-3. Commit your changes: `git commit -am 'Add new feature'`
-4. Push to the branch: `git push origin feature/your-feature`
-5. Submit a pull request
+3. Share the room link with friends to start a video call and messaging.
 
 ## License
 
 This project is licensed under the [MIT License](LICENSE).
 
 ---
-
-Feel free to ask questions or report issues [here](https://github.com/sandeshkhadka10/Meetly/issues).
